@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Mrpunyapal\LaravelExtendedRelationships\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelExtendedRelationshipsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-extended-relationships';
 
     public $description = 'My command';
 
