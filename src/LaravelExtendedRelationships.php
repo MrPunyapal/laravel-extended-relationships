@@ -4,6 +4,7 @@ namespace Mrpunyapal\LaravelExtendedRelationships;
 
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyWithManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithManyKeys;
+use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithColumnKeyArray;
 
 trait LaravelExtendedRelationships
 {
@@ -21,7 +22,7 @@ trait LaravelExtendedRelationships
 
     /**
      * @param  string  $related
-     * @param  string[]|null  $foreignKeys
+     * @param  string[]|null  $relations
      * @param  string|null  $localKey
      * @return HasManyWithManyKeys
      */
@@ -30,4 +31,17 @@ trait LaravelExtendedRelationships
         $instance = new $related();
         return new HasManyWithManyKeys($instance->newQuery(), $this, $relations, $localKey);
     }
+    
+      /**
+     * @param  string  $related
+     * @param  string|null  $localKey
+     * @param  string|null  $foreignKey
+     * @return HasManyWithColumnKeyArray
+     */
+    public function hasManyWithColumnKeyArray(string $related, ?string $localKey, ?string $foreignKey):HasManyWithColumnKeyArray
+    {
+        $instance = new $related();
+        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $instance->getTable() . '.' . $localKey, $foreignKey);
+    }
+
 }
