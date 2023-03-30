@@ -28,9 +28,11 @@ return [
 
 ## Usage
 
+In Model.
+
 ```php
 
-use BelongsToManyMerged;
+use LaravelExtendedRelationships;
 
 public function auditors()
     {
@@ -41,6 +43,26 @@ public function auditors()
         )->select('name', 'id');
     }
 ```
+
+While fetching data.
+
+```php
+
+$post = Post::with('auditors')->first();
+
+//creator
+
+$post->creator;
+
+//updater
+
+$post->updater;
+
+```
+
+this is how you can have N number of relationships with defining single relationship.
+
+and single query for all relationship will he fire in database for all the relationships.
 
 ## Testing
 
