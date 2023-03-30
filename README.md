@@ -113,6 +113,40 @@ $post->deleted;
 
 ```
 
+if you have column with array of localkeys like [25,60] then you can use.
+
+```php 
+
+use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
+
+class User extends Model{
+
+    use LaravelExtendedRelationships;
+
+    public function addresses(){
+        return $this->hasManyWithColumnKeyArray(
+            Address::class,
+            'addresses',
+            'id'
+        );
+    }
+}
+
+```
+
+While fetching data.
+
+```php
+
+$post = User::with('addresses')->first();
+
+//created
+
+$post->addresses;
+
+```
+you will get addresses with ids 25 and 60.
+
 ## Testing
 
 ```bash
