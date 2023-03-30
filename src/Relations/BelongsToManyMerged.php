@@ -111,11 +111,7 @@ class BelongsToManyMerged extends Relation
         foreach ($models as $model) {
             foreach ($this->localKeys as $localKey) {
                 $key = $model->getAttribute($localKey);
-                if (
-                    isset($dictionary[$key])
-                ) {
-                    $model->setRelation($this->relations[$localKey], $dictionary[$key]);
-                }
+                (isset($dictionary[$key]) ? $model->setRelation($this->relations[$localKey], $dictionary[$key]) : null);
             }
         }
         $model->unsetRelation($relation);
