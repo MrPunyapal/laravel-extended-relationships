@@ -62,7 +62,7 @@ $post->updater;
 
 this is how you can have N number of relationships with defining single relationship.
 
-and single query for all relationship will he fire in database for all the relationships.
+and single query for all relationship will be fire in database for all the relationships.
 
 ## Testing
 
