@@ -32,16 +32,21 @@ In Model.
 
 ```php
 
-use LaravelExtendedRelationships;
+use Mrpunyapal\LaravelExtendedRelationships\LaravelHasManyMerged;
 
-public function auditors()
-    {
-        return $this->belongsToManyMerged(
+class Post extends Model{
+
+    use LaravelExtendedRelationships;
+
+    public function auditors(){
+        return $this->belongsToManyWithManyKeys(
             User::class,
             'id',
-            ['created_by' => 'creator', 'updated_by' => 'updater']
-        )->select('name', 'id');
+            ['created_by' => 'creator', 'updated_by' => 'updater', 'deleted_by' => 'deleter']
+        );
     }
+}
+
 ```
 
 While fetching data.
@@ -58,11 +63,55 @@ $post->creator;
 
 $post->updater;
 
+//deleter
+
+$post->deleter;
+
 ```
 
 this is how you can have N number of relationships with defining single relationship.
 
 and single query for all relationship will be fire in database for all the relationships.
+
+
+```php
+
+use Mrpunyapal\LaravelExtendedRelationships\LaravelHasManyMerged;
+
+class User extends Model{
+
+    use LaravelExtendedRelationships;
+
+    public function audited(){
+        return $this->hasManyWithManyKeys(
+            Post::class,
+            ['created_by' => 'created', 'updated_by' => 'updated', 'deleted_by' => 'deleted'],
+            'id'
+        );
+    }
+}
+
+```
+
+While fetching data.
+
+```php
+
+$post = User::with('audited')->first();
+
+//created
+
+$post->created;
+
+//updated
+
+$post->updated;
+
+//deleted
+
+$post->deleted;
+
+```
 
 ## Testing
 
