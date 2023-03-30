@@ -32,7 +32,7 @@ In Model.
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\LaravelHasManyMerged;
+use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
 
 class Post extends Model{
 
@@ -76,7 +76,7 @@ and single query for all relationship will be fire in database for all the relat
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\LaravelHasManyMerged;
+use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
 
 class User extends Model{
 
