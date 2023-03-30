@@ -1,6 +1,6 @@
 <?php
 
-namespace Mrpunyapal\LaravelExtendedRelationships\HasManyWithColumnKeyArray;
+namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Collection;

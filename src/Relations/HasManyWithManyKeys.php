@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mrpunyapal\LaravelExtendedRelationships\LaravelHasManyMerged;
+namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -134,7 +134,7 @@ class HasManyWithManyKeys extends Relation
         // link them up with their children using the keyed dictionary to make the
         // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
-            $key = $model->getAttribute($this->localKey)]);
+            $key = $model->getAttribute($this->localKey);
             foreach ($this->foreignKeys as $foreignKey) {
                 if($dictionary[$key]->{$foreignKey} == $key){
                     $model->setRelation($this->relations[$foreignKey],$dictionary[$key]);
