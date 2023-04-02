@@ -136,9 +136,17 @@ class User extends Model
 {
     use LaravelExtendedRelationships;
 
+    protected $casts=[
+       'posts' => 'array'
+    ];
+
     public function posts()
     {
-        return $this->hasManyWithColumnKeyArray(Post::class, 'posts', 'id');
+        return $this->hasManyWithColumnKeyArray(
+                      Post::class,
+                      'posts', 
+                      'id'
+        );
     }
 }
 
