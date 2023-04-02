@@ -1,10 +1,12 @@
 {
     "name": "mr-punyapal/laravel-extended-relationships",
-    "description": "This is my package laravel-extended-relationships",
+    "description": "Package provides additional, more efficient relationship methods for Laravel Eloquent models.",
     "keywords": [
         "mr-punyapal",
         "laravel",
-        "laravel-extended-relationships"
+        "laravel-extended-relationships",
+        "relationship",
+        "has-many"
     ],
     "homepage": "https://github.com/mr-punyapal/laravel-extended-relationships",
     "license": "MIT",
@@ -51,16 +53,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Mrpunyapal\\LaravelExtendedRelationships\\LaravelExtendedRelationshipsServiceProvider"
-            ],
-            "aliases": {
-                "LaravelExtendedRelationships": "Mrpunyapal\\LaravelExtendedRelationships\\Facades\\LaravelExtendedRelationships"
-            }
         }
     },
     "minimum-stability": "dev",
