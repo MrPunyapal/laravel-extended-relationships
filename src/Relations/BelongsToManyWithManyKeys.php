@@ -117,15 +117,14 @@ class BelongsToManyWithManyKeys extends Relation
                     $model->setRelation($this->relations[$localKey], $dictionary[$key]);
                 }
             }
+            $model->unsetRelation($relation);
         }
-        $model->unsetRelation($relation);
         return $models;
     }
 
 
     public function buildDictionary(Collection $models)
     {
-
         $dictionary = [];
         foreach ($models as $model) {
             $dictionary[$model->{$this->foreignKey}] = $model;

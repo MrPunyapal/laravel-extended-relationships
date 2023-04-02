@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class HasManyWithManyKeys extends Relation
 {
-    
+
     /**
      * The foreign keys of the parent model.
      *
@@ -129,15 +129,15 @@ class HasManyWithManyKeys extends Relation
     public function match(array $models, Collection $results, $relation)
     {
         $dictionary = $this->buildDictionary($results);
-
+        // dd($dictionary);
         // Once we have the dictionary we can simply spin through the parent models to
         // link them up with their children using the keyed dictionary to make the
         // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
             $key = $model->getAttribute($this->localKey);
             foreach ($this->foreignKeys as $foreignKey) {
-                if($dictionary[$key]->{$foreignKey} == $key){
-                    $model->setRelation($this->relations[$foreignKey],$dictionary[$key]);
+                if (isset($dictionary[$foreignKey][$key])) {
+                    $model->setRelation($this->relations[$foreignKey], $dictionary[$foreignKey][$key]);
                 }
             }
             $model->unsetRelation($relation);
@@ -154,10 +154,11 @@ class HasManyWithManyKeys extends Relation
      */
     protected function buildDictionary(Collection $models): array
     {
+        // dd($models);
         $dictionary = [];
         foreach ($models as $model) {
             foreach ($this->foreignKeys as $foreignKey) {
-                $dictionary[$model->{$foreignKey}] = $model;
+                $dictionary[$foreignKey][$model->{$foreignKey}] = $model;
             }
         }
         return $dictionary;
@@ -172,5 +173,4 @@ class HasManyWithManyKeys extends Relation
     {
         return $this->get();
     }
-
 }

@@ -34,7 +34,7 @@ class HasManyWithColumnKeyArray extends HasMany
         foreach ($models as $model) {
             $ids = $model->getAttribute($this->localKey);
             $collection = collect();
-            foreach($ids as $id) {
+            foreach($ids ?? [] as $id) {
                 if(isSet($dictionary[$id]))
                     $collection = $collection->merge($this->getRelationValue($dictionary, $id, 'many'));
             }

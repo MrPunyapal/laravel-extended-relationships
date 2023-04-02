@@ -41,7 +41,7 @@ trait LaravelExtendedRelationships
     public function hasManyWithColumnKeyArray(string $related, ?string $localKey, ?string $foreignKey):HasManyWithColumnKeyArray
     {
         $instance = new $related();
-        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $instance->getTable() . '.' . $localKey, $foreignKey);
+        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $foreignKey, $instance->getTable() . '.' . $localKey);
     }
 
 }
