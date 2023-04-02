@@ -55,7 +55,7 @@ public function auditors() {
 
 * The related model (`User::class`)
 * The foreign key (`id`)
-* An array mapping the related table's foreign key names to the corresponding attribute names on the model (`['created_by' => 'creator', ...]`)
+* An array mapping the related table's foreign key names to the corresponding relation names on the model (`['created_by' => 'creator', ...]`)
 
 ### Then, you can fetch data from the auditors relationship like so:
 
