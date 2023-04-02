@@ -38,10 +38,10 @@ trait LaravelExtendedRelationships
      * @param  string|null  $foreignKey
      * @return HasManyWithColumnKeyArray
      */
-    public function hasManyWithColumnKeyArray(string $related, ?string $localKey, ?string $foreignKey):HasManyWithColumnKeyArray
+    public function hasManyWithColumnKeyArray(string $related, ?string $foreignKey, ?string $localKey):HasManyWithColumnKeyArray
     {
         $instance = new $related();
-        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $foreignKey, $instance->getTable() . '.' . $localKey);
+        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $foreignKey, $localKey);
     }
 
 }

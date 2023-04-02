@@ -5,6 +5,11 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mr-punyapal/laravel-extended-relationships/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mr-punyapal/laravel-extended-relationships/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/mr-punyapal/laravel-extended-relationships.svg?style=flat-square)](https://packagist.org/packages/mr-punyapal/laravel-extended-relationships)
 
+### What is a need of extended relationships?
+The laravel-extended-relationships package provides additional, more efficient relationship methods for Laravel Eloquent models. The package offers several useful features such as reducing the number of database queries, improving performance, and minimizing duplicate code.
+  
+I faced issue and made my own relationships then realise if I can use packages from open source then I can make one too and made this package.
+
 ## Installation
 
 You can install the package via composer:
@@ -13,65 +18,69 @@ You can install the package via composer:
 composer require mr-punyapal/laravel-extended-relationships
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="laravel-extended-relationships-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
 ## Usage
 
-In Model.
+First, include the `LaravelExtendedRelationships` trait in your model:
 
 ```php
 
 use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
 
-class Post extends Model{
-
+class Post extends Model {
     use LaravelExtendedRelationships;
 
-    public function auditors(){
-        return $this->belongsToManyWithManyKeys(
-            User::class,
-            'id',
-            ['created_by' => 'creator', 'updated_by' => 'updater', 'deleted_by' => 'deleter']
-        );
-    }
+    //...
 }
 
 ```
 
-While fetching data.
+Next, define the `BelongsToManyWithManyKeys` relationship with the `belongsToManyWithManyKeys` method:
+
+```php
+
+public function auditors() {
+    return $this->belongsToManyWithManyKeys(
+        User::class,
+        'id',
+        [
+            'created_by' => 'creator',
+            'updated_by' => 'updater',
+            'deleted_by' => 'deleter'
+        ]
+    );
+}
+
+```
+
+### This method takes three arguments:
+
+* The related model (`User::class`)
+* The foreign key (`id`)
+* An array mapping the related table's foreign key names to the corresponding attribute names on the model (`['created_by' => 'creator', ...]`)
+
+### Then, you can fetch data from the auditors relationship like so:
 
 ```php
 
 $post = Post::with('auditors')->first();
 
-//creator
-
+// Get the creator
 $post->creator;
 
-//updater
-
+// Get the updater
 $post->updater;
 
-//deleter
-
+// Get the deleter
 $post->deleter;
+
 
 ```
 
-this is how you can have N number of relationships with defining single relationship.
+This allows you to define multiple relationships with just one method, and only a single query is fired in the database for all the relationships.
 
-and single query for all relationship will be fire in database for all the relationships.
+
+
+### Inverse relationship.
 
 
 ```php
@@ -85,7 +94,11 @@ class User extends Model{
     public function audited(){
         return $this->hasManyWithManyKeys(
             Post::class,
-            ['created_by' => 'created', 'updated_by' => 'updated', 'deleted_by' => 'deleted'],
+            [
+                'created_by' => 'created', 
+                'updated_by' => 'updated', 
+                'deleted_by' => 'deleted'
+            ],
             'id'
         );
     }
@@ -93,59 +106,60 @@ class User extends Model{
 
 ```
 
-While fetching data.
+To retrieve the audited posts of a user, you can use the audited relationship. Here's an example:
 
 ```php
 
-$post = User::with('audited')->first();
+$user = User::with('audited')->first();
 
-//created
+// Get posts created by the user
+$user->created;
 
-$post->created;
+// Get posts updated by the user
+$user->updated;
 
-//updated
-
-$post->updated;
-
-//deleted
-
-$post->deleted;
+// Get posts deleted by the user
+$user->deleted;
 
 ```
 
-if you have column with array of localkeys like [25,60] then you can use.
+This allows you to define multiple relationships between models with a single method call, simplifying your code and reducing the number of queries executed.
+
+### Bonus Relationship
+
+If you have a column posts in your users table which stores an array of local keys like [25, 60], you can use the following relationship:
 
 ```php 
 
 use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
 
-class User extends Model{
-
+class User extends Model
+{
     use LaravelExtendedRelationships;
 
-    public function addresses(){
-        return $this->hasManyWithColumnKeyArray(
-            Address::class,
-            'addresses',
-            'id'
-        );
+    public function posts()
+    {
+        return $this->hasManyWithColumnKeyArray(Post::class, 'posts', 'id');
     }
 }
 
 ```
 
-While fetching data.
+When fetching data, you can retrieve the related posts with:
 
 ```php
 
-$post = User::with('addresses')->first();
+$user = User::with('posts')->first();
 
-//created
-
-$post->addresses;
+// get posts with ids 25 and 60
+$user->posts;
 
 ```
-you will get addresses with ids 25 and 60.
+This allows you to easily retrieve related records with an array of local keys, which can be useful in certain scenarios.
+
+## Note:
+
+Right now, the `belongsToManyWithManyKeys` and `hasManyWithManyKeys` methods work well with eager loading of the relation. However, when loading relations of a single model, the data may not be sorted as expected (e.g., in the order of "updater", "creator", etc.). Instead, all data will be returned as auditors. This functionality will be added in future updates.
 
 ## Testing
 
