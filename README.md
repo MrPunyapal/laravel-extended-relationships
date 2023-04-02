@@ -143,9 +143,9 @@ class User extends Model
     public function posts()
     {
         return $this->hasManyWithColumnKeyArray(
-                      Post::class,
-                      'posts', 
-                      'id'
+             Post::class,
+             'posts', 
+             'id'
         );
     }
 }
