@@ -19,14 +19,14 @@ composer require mr-punyapal/laravel-extended-relationships
 
 ## Usage
 
-First, include the `LaravelExtendedRelationships` trait in your model:
+First, include the `HasExtendedRelationships` trait in your model:
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
+use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class Post extends Model {
-    use LaravelExtendedRelationships;
+    use HasExtendedRelationships;
 
     //...
 }
@@ -84,11 +84,11 @@ This allows you to define multiple relationships with just one method, and only 
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
+use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class User extends Model{
 
-    use LaravelExtendedRelationships;
+    use HasExtendedRelationships;
 
     public function audited(){
         return $this->hasManyWithManyKeys(
@@ -130,11 +130,11 @@ If you have a column posts in your users table which stores an array of local ke
 
 ```php 
 
-use Mrpunyapal\LaravelExtendedRelationships\LaravelExtendedRelationships;
+use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class User extends Model
 {
-    use LaravelExtendedRelationships;
+    use HasExtendedRelationships;
 
     protected $casts=[
        'posts' => 'array'

@@ -6,7 +6,7 @@ use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyWithManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithColumnKeyArray;
 
-trait LaravelExtendedRelationships
+trait HasExtendedRelationships
 {
     /**
      * @param  string  $related
