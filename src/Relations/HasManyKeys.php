@@ -72,17 +72,6 @@ class HasManyKeys extends Relation
     }
 
     /**
-     * Get the key value of the parent's local key.
-     * Info: From HasOneOrMany class.
-     *
-     * @return mixed
-     */
-    public function getParentKey()
-    {
-        return $this->parent->getAttribute($this->localKey);
-    }
-
-    /**
      * Set the constraints for an eager load of the relation.
      * Note: Used to load relations of multiple models at once.
      *
@@ -158,6 +147,17 @@ class HasManyKeys extends Relation
         return $dictionary;
     }
 
+    /**
+     * Get the key value of the parent's local key.
+     * Info: From HasOneOrMany class.
+     *
+     * @return mixed
+     */
+    public function getParentKey()
+    {
+        return $this->parent->getAttribute($this->localKey);
+    }
+    
     /**
      * Get the results of the relationship.
      *

@@ -104,15 +104,12 @@ class BelongsToManyKeys extends Relation
     public function match(array $models, Collection $results, $relation)
     {
         $dictionary = $this->buildDictionary($results);
-        
+
         foreach ($models as $model) {
             foreach ($this->localKeys as $localKey) {
                 $key = $model->getAttribute($localKey);
-                if (
-                    isset($dictionary[$key])
-                ) {
+                if (isset($dictionary[$key]))
                     $model->setRelation($this->relations[$localKey], $dictionary[$key]);
-                }
             }
             $model->unsetRelation($relation);
         }
