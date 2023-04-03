@@ -5,7 +5,7 @@ namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Collection;
 
-class HasManyWithColumnKeyArray extends HasMany
+class HasManyArrayColumn extends HasMany
 {
     /**
      * Set the base constraints on the relation query.

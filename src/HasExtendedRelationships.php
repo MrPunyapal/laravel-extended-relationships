@@ -2,9 +2,9 @@
 
 namespace Mrpunyapal\LaravelExtendedRelationships;
 
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyWithManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyWithColumnKeyArray;
+use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
+use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
+use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
 
 trait HasExtendedRelationships
 {
@@ -12,36 +12,36 @@ trait HasExtendedRelationships
      * @param  string  $related
      * @param  string|null  $foreignKey
      * @param  string[]|null  $relations
-     * @return BelongsToManyWithManyKeys
+     * @return BelongsToManyKeys
      */
-    public function belongsToManyWithManyKeys(string $related, string $foreignKey, array $relations): BelongsToManyWithManyKeys
+    public function belongsToManyKeys(string $related, string $foreignKey, array $relations): BelongsToManyKeys
     {
         $instance = new $related();
-        return new BelongsToManyWithManyKeys($instance->newQuery(), $this, $foreignKey, $relations);
+        return new BelongsToManyKeys($instance->newQuery(), $this, $foreignKey, $relations);
     }
 
     /**
      * @param  string  $related
      * @param  string[]|null  $relations
      * @param  string|null  $localKey
-     * @return HasManyWithManyKeys
+     * @return HasManyKeys
      */
-    public function hasManyWithManyKeys(string $related, ?array $relations = null, ?string $localKey = null): HasManyWithManyKeys
+    public function hasManyKeys(string $related, ?array $relations = null, ?string $localKey = null): HasManyKeys
     {
         $instance = new $related();
-        return new HasManyWithManyKeys($instance->newQuery(), $this, $relations, $localKey);
+        return new HasManyKeys($instance->newQuery(), $this, $relations, $localKey);
     }
     
       /**
      * @param  string  $related
      * @param  string|null  $localKey
      * @param  string|null  $foreignKey
-     * @return HasManyWithColumnKeyArray
+     * @return HasManyArrayColumn
      */
-    public function hasManyWithColumnKeyArray(string $related, ?string $foreignKey, ?string $localKey):HasManyWithColumnKeyArray
+    public function hasManyArrayColumn(string $related, ?string $foreignKey, ?string $localKey):HasManyArrayColumn
     {
         $instance = new $related();
-        return new HasManyWithColumnKeyArray($instance->newQuery(), $this, $foreignKey, $localKey);
+        return new HasManyArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey);
     }
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-class BelongsToManyWithManyKeys extends Relation
+class BelongsToManyKeys extends Relation
 {
     /**
      * The local keys of the parent model.

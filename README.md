@@ -33,12 +33,12 @@ class Post extends Model {
 
 ```
 
-Next, define the `BelongsToManyWithManyKeys` relationship with the `belongsToManyWithManyKeys` method:
+Next, define the `BelongsToManyKeys` relationship with the `belongsToManyKeys` method:
 
 ```php
 
 public function auditors() {
-    return $this->belongsToManyWithManyKeys(
+    return $this->belongsToManyKeys(
         User::class,
         'id',
         [
@@ -91,7 +91,7 @@ class User extends Model{
     use HasExtendedRelationships;
 
     public function audited(){
-        return $this->hasManyWithManyKeys(
+        return $this->hasManyKeys(
             Post::class,
             [
                 'created_by' => 'created', 
@@ -126,7 +126,7 @@ This allows you to define multiple relationships between models with a single me
 
 ### Bonus Relationship
 
-If you have a column posts in your users table which stores an array of local keys like [25, 60], you can use the following relationship:
+If you have a column posts in your users table which stores an array of local keys like [7, 71], you can use the following relationship:
 
 ```php 
 
@@ -140,9 +140,9 @@ class User extends Model
        'posts' => 'array'
     ];
 
-    public function posts()
+    public function myPosts()
     {
-        return $this->hasManyWithColumnKeyArray(
+        return $this->hasManyArrayColumn(
              Post::class,
              'id',
              'posts'
@@ -156,17 +156,17 @@ When fetching data, you can retrieve the related posts with:
 
 ```php
 
-$user = User::with('posts')->first();
+$user = User::with('myPosts')->first();
 
-// get posts with ids 25 and 60
-$user->posts;
+// get posts with ids 7 and 71
+$user->myPosts;
 
 ```
 This allows you to easily retrieve related records with an array of local keys, which can be useful in certain scenarios.
 
 ## Note:
 
-Right now, the `belongsToManyWithManyKeys` and `hasManyWithManyKeys` methods work well with eager loading of the relation. However, when loading relations of a single model, the data may not be sorted as expected (e.g., in the order of "updater", "creator", etc.). Instead, all data will be returned as auditors. This functionality will be added in future updates.
+Right now, the `BelongsToManyKeys` and `HasManyKeys` methods work well with eager loading of the relation. However, when loading relations of a single model, the data may not be sorted as expected (e.g., in the order of "updater", "creator", etc.). Instead, all data will be returned as auditors. This functionality will be added in future updates.
 
 ## Testing
 
