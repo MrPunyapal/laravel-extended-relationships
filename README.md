@@ -144,8 +144,8 @@ class User extends Model
     {
         return $this->hasManyWithColumnKeyArray(
              Post::class,
-             'posts', 
-             'id'
+             'id',
+             'posts'
         );
     }
 }
