@@ -182,7 +182,7 @@ class Company extends Model
         return $this->belongsToArrayColumn(
             User::class,
             'id',
-            'founders'
+            'companies'
         );
     }
 }
@@ -201,7 +201,7 @@ $company->companyFounders;
 
 ```
 
-This will provide you with data from the `users` table where the `founders` array column contains the value 71.
+This will provide you with data from the `users` table where the `companies` array column contains the value 71.
 
 ## Note:
 
