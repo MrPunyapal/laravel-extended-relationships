@@ -2,6 +2,7 @@
 
 namespace Mrpunyapal\LaravelExtendedRelationships;
 
+use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
@@ -42,6 +43,18 @@ trait HasExtendedRelationships
     {
         $instance = new $related();
         return new HasManyArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey);
+    }
+
+    /**
+     * @param  string  $related
+     * @param  string|null  $localKey
+     * @param  string|null  $foreignKey
+     * @return BelongsToArrayColumn
+     */
+    public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey): BelongsToArrayColumn
+    {
+        $instance = new $related();
+        return new BelongsToArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey, null);
     }
 
 }

@@ -124,9 +124,9 @@ $user->deleted;
 
 This allows you to define multiple relationships between models with a single method call, simplifying your code and reducing the number of queries executed.
 
-### Bonus Relationship
+### HasManyArrayColumn
 
-If you have a column posts in your users table which stores an array of local keys like [7, 71], you can use the following relationship:
+If you have a column companies in your users table which stores an array of local keys like [7, 71], you can use the following relationship:
 
 ```php 
 
@@ -137,36 +137,77 @@ class User extends Model
     use HasExtendedRelationships;
 
     protected $casts=[
-       'posts' => 'array'
+       'companies' => 'array'
     ];
 
-    public function myPosts()
+    public function myCompanies()
     {
         return $this->hasManyArrayColumn(
-             Post::class,
+             Company::class,
              'id',
-             'posts'
+             'companies'
         );
     }
 }
 
 ```
 
-When fetching data, you can retrieve the related posts with:
+When fetching data, you can retrieve the related companies with:
 
 ```php
 
-$user = User::with('myPosts')->first();
+$user = User::with('myCompanies')->first();
 
-// get posts with ids 7 and 71
-$user->myPosts;
+// get companies with ids 7 and 71
+$user->myCompanies;
 
 ```
+
 This allows you to easily retrieve related records with an array of local keys, which can be useful in certain scenarios.
+
+### Inverse Relationship for `HasManyArrayColumn`
+
+The `BelongsToArrayColumn` method allows you to define a relationship between a model and an array column on another model. Here's an example:
+
+```php
+
+use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+
+class Company extends Model
+{
+    use HasExtendedRelationships;
+
+    public function companyFounders()
+    {
+        return $this->belongsToArrayColumn(
+            User::class,
+            'id',
+            'founders'
+        );
+    }
+}
+
+```
+
+With this relationship defined, you can fetch related company founders with the following code:
+
+```php
+
+$company = Company::with('companyFounders')->find(71);
+
+// Founders for company with id 71
+
+$company->companyFounders;
+
+```
+
+This will provide you with data from the `users` table where the `founders` array column contains the value 71.
 
 ## Note:
 
 Right now, the `BelongsToManyKeys` and `HasManyKeys` methods work well with eager loading of the relation. However, when loading relations of a single model, the data may not be sorted as expected (e.g., in the order of "updater", "creator", etc.). Instead, all data will be returned as auditors. This functionality will be added in future updates.
+
+While `BelongsToArrayColumn` may work well with data such as `[7,71]`, it may not function properly if the data in the database is `["7","71"]`. It is possible that this issue will be addressed in future updates.
 
 ## Testing
 
