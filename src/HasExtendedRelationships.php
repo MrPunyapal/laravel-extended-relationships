@@ -35,8 +35,8 @@ trait HasExtendedRelationships
     
       /**
      * @param  string  $related
-     * @param  string|null  $localKey
      * @param  string|null  $foreignKey
+     * @param  string|null  $localKey
      * @return HasManyArrayColumn
      */
     public function hasManyArrayColumn(string $related, ?string $foreignKey, ?string $localKey):HasManyArrayColumn
@@ -47,8 +47,8 @@ trait HasExtendedRelationships
 
     /**
      * @param  string  $related
-     * @param  string|null  $localKey
      * @param  string|null  $foreignKey
+     * @param  string|null  $localKey
      * @return BelongsToArrayColumn
      */
     public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey): BelongsToArrayColumn
