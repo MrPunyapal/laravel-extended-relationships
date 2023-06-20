@@ -118,12 +118,13 @@ class HasManyKeys extends Relation
 
         foreach ($models as $model) {
             $key = $model->getAttribute($this->localKey);
+            $desireRelations = json_decode('{}');
             foreach ($this->foreignKeys as $foreignKey) {
                 if (isset($dictionary[$foreignKey][$key])) {
-                    $model->setRelation($this->relations[$foreignKey], $dictionary[$foreignKey][$key]);
+                    $desireRelations->{$this->relations[$foreignKey]} = $dictionary[$foreignKey][$key];
                 }
             }
-            $model->unsetRelation($relation);
+            $model->setRelation($relation, $desireRelations);
         }
         return $models;
     }
@@ -157,7 +158,7 @@ class HasManyKeys extends Relation
     {
         return $this->parent->getAttribute($this->localKey);
     }
-    
+
     /**
      * Get the results of the relationship.
      *
@@ -165,6 +166,15 @@ class HasManyKeys extends Relation
      */
     public function getResults()
     {
-        return $this->get();
+        if (!static::$constraints) {
+            return $this->get();
+        }
+        $results = $this->get();
+        $desireResults = json_decode('{}');
+        foreach ($this->foreignKeys as $foreignKey) {
+            $desireResults->{$this->relations[$foreignKey]} = $results->where($foreignKey, '=', $this->getParentKey())
+                ->whereNotNull($foreignKey);
+        }
+        return $desireResults;
     }
 }

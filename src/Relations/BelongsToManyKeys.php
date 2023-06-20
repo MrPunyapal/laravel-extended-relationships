@@ -55,10 +55,8 @@ class BelongsToManyKeys extends Relation
     public function addConstraints()
     {
         if (static::$constraints) {
-            $localKeys = $this->localKeys;
-
-            $this->query->where(function ($query) use ($localKeys) {
-                foreach ($localKeys as $localKey) {
+            $this->query->where(function ($query) {
+                foreach ($this->localKeys as $localKey) {
                     $query->orWhere(function ($query) use ($localKey) {
                         $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
                             ->whereNotNull($this->foreignKey);
@@ -106,12 +104,13 @@ class BelongsToManyKeys extends Relation
         $dictionary = $this->buildDictionary($results);
 
         foreach ($models as $model) {
+            $desireRelations = json_decode('{}');
             foreach ($this->localKeys as $localKey) {
                 $key = $model->getAttribute($localKey);
                 if (isset($dictionary[$key]))
-                    $model->setRelation($this->relations[$localKey], $dictionary[$key]);
+                    $desireRelations->{$this->relations[$localKey]} = $dictionary[$key];
             }
-            $model->unsetRelation($relation);
+            $model->setRelation($relation, $desireRelations);
         }
         return $models;
     }
@@ -140,6 +139,14 @@ class BelongsToManyKeys extends Relation
      */
     public function getResults()
     {
-        return $this->query->get();
+        if (!static::$constraints) {
+            return $this->query->get();;
+        }
+        $results = $this->query->get();
+        $desireResults = json_decode('{}');
+        foreach ($this->localKeys as $localKey) {
+            $desireResults->{$this->relations[$localKey]} = $results->where($this->foreignKey, '=', $this->getParentKey($localKey))->first();
+        }
+        return  $desireResults;
     }
 }

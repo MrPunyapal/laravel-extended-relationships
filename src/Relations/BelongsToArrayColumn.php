@@ -16,7 +16,8 @@ class BelongsToArrayColumn extends BelongsTo
         if (static::$constraints) {
             $query = $this->getBaseQuery();
 
-            $query->whereJsonContains($this->ownerKey, $this->getParentKey());
+            $query->whereJsonContains($this->ownerKey, $this->getParentKey())
+                ->orWhereJsonContains($this->ownerKey, $this->getParentKey() . '');
 
             $query->whereNotNull($this->ownerKey);
         }
@@ -31,10 +32,10 @@ class BelongsToArrayColumn extends BelongsTo
     public function addEagerConstraints(array $models)
     {
         $ids = $this->getEagerModelKeys($models);
-        $this->query->where(function ($q) use($ids)
-        {
+        $this->query->where(function ($q) use ($ids) {
             foreach ($ids as $id) {
-                $q->orWhereJsonContains($this->ownerKey,$id);
+                $q->orWhereJsonContains($this->ownerKey, $id)
+                    ->orWhereJsonContains($this->ownerKey, $id . '');
             }
         });
     }
