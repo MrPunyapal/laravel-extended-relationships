@@ -44,7 +44,7 @@ public function auditors() {
         [
             'created_by' => 'creator',
             'updated_by' => 'updater',
-            'deleted_by' => 'deleter'
+            'deleted_by' => 'deleter',
         ]
     );
 }
@@ -64,14 +64,27 @@ public function auditors() {
 $post = Post::with('auditors')->first();
 
 // Get the creator
-$post->creator;
+$post->auditors->creator;
 
 // Get the updater
-$post->updater;
+$post->auditors->updater;
 
 // Get the deleter
-$post->deleter;
+$post->auditors->deleter;
 
+
+// also works with lazy loading
+
+$post = Post::find(7);
+
+// Get the creator
+$post->auditors->creator;
+
+// Get the updater
+$post->auditors->updater;
+
+// Get the deleter
+$post->auditors->deleter;
 
 ```
 
@@ -96,7 +109,7 @@ class User extends Model{
             [
                 'created_by' => 'created', 
                 'updated_by' => 'updated', 
-                'deleted_by' => 'deleted'
+                'deleted_by' => 'deleted',
             ],
             'id'
         );
@@ -112,13 +125,26 @@ To retrieve the audited posts of a user, you can use the audited relationship. H
 $user = User::with('audited')->first();
 
 // Get posts created by the user
-$user->created;
+$user->audited->created;
 
 // Get posts updated by the user
-$user->updated;
+$user->audited->updated;
 
 // Get posts deleted by the user
-$user->deleted;
+$user->audited->deleted;
+
+// also works with lazy loading
+
+$user = User::find(71);
+
+// Get posts created by the user
+$user->audited->created;
+
+// Get posts updated by the user
+$user->audited->updated;
+
+// Get posts deleted by the user
+$user->audited->deleted;
 
 ```
 
@@ -126,7 +152,7 @@ This allows you to define multiple relationships between models with a single me
 
 ### HasManyArrayColumn
 
-If you have a column companies in your users table which stores an array of local keys like [7, 71], you can use the following relationship:
+If you have a column companies in your users table which stores an array of local keys like [7, 71] or ["7", "71"], you can use the following relationship:
 
 ```php 
 
@@ -202,12 +228,6 @@ $company->companyFounders;
 ```
 
 This will provide you with data from the `users` table where the `founders` array column contains the value 71.
-
-## Note:
-
-Right now, the `BelongsToManyKeys` and `HasManyKeys` methods work well with eager loading of the relation. However, when loading relations of a single model, the data may not be sorted as expected (e.g., in the order of "updater", "creator", etc.). Instead, all data will be returned as auditors. This functionality will be added in future updates.
-
-While `BelongsToArrayColumn` may work well with data such as `[7,71]`, it may not function properly if the data in the database is `["7","71"]`. It is possible that this issue will be addressed in future updates.
 
 ## Testing
 
