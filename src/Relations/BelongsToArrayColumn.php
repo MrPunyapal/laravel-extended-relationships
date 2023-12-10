@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BelongsToArrayColumn extends BelongsTo
 {
+    /**
+     * Indicates whether the value is a string.
+     *
+     * @var bool
+     */
     protected $isString;
 
     /**
