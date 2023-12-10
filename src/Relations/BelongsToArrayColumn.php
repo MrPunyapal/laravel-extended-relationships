@@ -17,7 +17,7 @@ class BelongsToArrayColumn extends BelongsTo
             $query = $this->getBaseQuery();
 
             $query->whereJsonContains($this->ownerKey, $this->getParentKey())
-                ->orWhereJsonContains($this->ownerKey, $this->getParentKey() . '');
+                ->orWhereJsonContains($this->ownerKey, $this->getParentKey().'');
 
             $query->whereNotNull($this->ownerKey);
         }
@@ -26,7 +26,6 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
      * @return void
      */
     public function addEagerConstraints(array $models)
@@ -35,7 +34,7 @@ class BelongsToArrayColumn extends BelongsTo
         $this->query->where(function ($q) use ($ids) {
             foreach ($ids as $id) {
                 $q->orWhereJsonContains($this->ownerKey, $id)
-                    ->orWhereJsonContains($this->ownerKey, $id . '');
+                    ->orWhereJsonContains($this->ownerKey, $id.'');
             }
         });
     }
@@ -43,7 +42,6 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Match the eagerly loaded results to their many parents.
      *
-     * @param  array  $models
      * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @param  string  $relation
      * @return array
@@ -55,8 +53,9 @@ class BelongsToArrayColumn extends BelongsTo
             $id = $model->getAttribute($this->foreignKey);
             $collection = collect();
             foreach ($results as $data) {
-                if (in_array($id, $data->{$owner}))
+                if (in_array($id, $data->{$owner})) {
                     $collection->push($data);
+                }
             }
             $model->setRelation($relation, $collection);
         }

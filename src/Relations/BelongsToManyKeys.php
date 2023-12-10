@@ -15,6 +15,7 @@ class BelongsToManyKeys extends Relation
      * @var string[]
      */
     protected $localKeys;
+
     /**
      * The local keys of the parent model.
      *
@@ -32,9 +33,6 @@ class BelongsToManyKeys extends Relation
     /**
      * Create a new has one or many relationship instance.
      *
-     * @param  Builder  $query
-     * @param  Model  $parent
-     * @param  string  $foreignKey
      * @param  array  $localKeys
      * @return void
      */
@@ -69,8 +67,6 @@ class BelongsToManyKeys extends Relation
     /**
      * Set the constraints for an eager load of the relation.
      * Note: Used to load relations of multiple models at once.
-     *
-     * @param  array  $models
      */
     public function addEagerConstraints(array $models)
     {
@@ -86,7 +82,6 @@ class BelongsToManyKeys extends Relation
     /**
      * Initialize the relation on a set of models.
      *
-     * @param  array   $models
      * @param  string  $relation
      * @return array
      */
@@ -107,14 +102,15 @@ class BelongsToManyKeys extends Relation
             $desireRelations = json_decode('{}');
             foreach ($this->localKeys as $localKey) {
                 $key = $model->getAttribute($localKey);
-                if (isset($dictionary[$key]))
+                if (isset($dictionary[$key])) {
                     $desireRelations->{$this->relations[$localKey]} = $dictionary[$key];
+                }
             }
             $model->setRelation($relation, $desireRelations);
         }
+
         return $models;
     }
-
 
     public function buildDictionary(Collection $models)
     {
@@ -122,15 +118,14 @@ class BelongsToManyKeys extends Relation
         foreach ($models as $model) {
             $dictionary[$model->{$this->foreignKey}] = $model;
         }
+
         return $dictionary;
     }
-
 
     public function getParentKey($localKey)
     {
         return $this->parent->getAttribute($localKey);
     }
-
 
     /**
      * Get the results of the relationship.
@@ -139,14 +134,15 @@ class BelongsToManyKeys extends Relation
      */
     public function getResults()
     {
-        if (!static::$constraints) {
-            return $this->query->get();;
+        if (! static::$constraints) {
+            return $this->query->get();
         }
         $results = $this->query->get();
         $desireResults = json_decode('{}');
         foreach ($this->localKeys as $localKey) {
             $desireResults->{$this->relations[$localKey]} = $results->where($this->foreignKey, '=', $this->getParentKey($localKey))->first();
         }
-        return  $desireResults;
+
+        return $desireResults;
     }
 }
