@@ -37,10 +37,10 @@ trait HasExtendedRelationships
         return new HasManyArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey);
     }
 
-    public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey): BelongsToArrayColumn
+    public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey, $isString = false): BelongsToArrayColumn
     {
         $instance = new $related();
 
-        return new BelongsToArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey, null);
+        return new BelongsToArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey, null, $isString);
     }
 }
