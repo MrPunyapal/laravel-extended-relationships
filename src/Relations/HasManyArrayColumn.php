@@ -43,7 +43,7 @@ class HasManyArrayColumn extends HasMany
     {
         $keys = [];
         collect($models)->each(function ($value) use ($key, &$keys) {
-            $keys = array_merge($keys, array_map('intval', ($value->getAttribute($key) ?? [])));
+            $keys = array_merge($keys, $value->getAttribute($key));
         });
 
         return array_unique($keys);
