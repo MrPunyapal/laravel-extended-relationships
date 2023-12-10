@@ -208,7 +208,8 @@ class Company extends Model
         return $this->belongsToArrayColumn(
             User::class,
             'id',
-            'companies'
+            'companies',
+            true // optional, default is false (if true then it treats all values as string)
         );
     }
 }

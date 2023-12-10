@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class HasManyKeys extends Relation
 {
-
     /**
      * The foreign keys of the parent model.
      *
@@ -34,10 +33,6 @@ class HasManyKeys extends Relation
     /**
      * Create a new has one or many relationship instance.
      *
-     * @param  Builder  $query
-     * @param  Model  $parent
-     * @param  array  $relations
-     * @param  string  $localKey
      * @return void
      */
     public function __construct(Builder $query, Model $parent, array $relations, string $localKey)
@@ -52,8 +47,6 @@ class HasManyKeys extends Relation
     /**
      * Set the base constraints on the relation query.
      * Note: Used to load relations of one model.
-     *
-     * @return void
      */
     public function addConstraints(): void
     {
@@ -74,8 +67,6 @@ class HasManyKeys extends Relation
     /**
      * Set the constraints for an eager load of the relation.
      * Note: Used to load relations of multiple models at once.
-     *
-     * @param  array  $models
      */
     public function addEagerConstraints(array $models): void
     {
@@ -90,7 +81,6 @@ class HasManyKeys extends Relation
     /**
      * Initialize the relation on a set of models.
      *
-     * @param  array  $models
      * @param  string  $relation
      * @return array
      */
@@ -107,8 +97,6 @@ class HasManyKeys extends Relation
      * Match the eagerly loaded results to their parents.
      * Info: From HasMany class.
      *
-     * @param  array  $models
-     * @param  Collection  $results
      * @param  string  $relation
      * @return array
      */
@@ -126,6 +114,7 @@ class HasManyKeys extends Relation
             }
             $model->setRelation($relation, $desireRelations);
         }
+
         return $models;
     }
 
@@ -134,7 +123,6 @@ class HasManyKeys extends Relation
      * Note: Custom code.
      *
      * @param  Collection  $results
-     * @return array
      */
     protected function buildDictionary(Collection $models): array
     {
@@ -145,6 +133,7 @@ class HasManyKeys extends Relation
                 $dictionary[$foreignKey][$model->{$foreignKey}] = $model;
             }
         }
+
         return $dictionary;
     }
 
@@ -166,7 +155,7 @@ class HasManyKeys extends Relation
      */
     public function getResults()
     {
-        if (!static::$constraints) {
+        if (! static::$constraints) {
             return $this->get();
         }
         $results = $this->get();
@@ -175,6 +164,7 @@ class HasManyKeys extends Relation
             $desireResults->{$this->relations[$foreignKey]} = $results->where($foreignKey, '=', $this->getParentKey())
                 ->whereNotNull($foreignKey);
         }
+
         return $desireResults;
     }
 }

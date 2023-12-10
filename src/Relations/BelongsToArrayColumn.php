@@ -2,10 +2,34 @@
 
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BelongsToArrayColumn extends BelongsTo
 {
+    /**
+     * Indicates whether the value is a string.
+     *
+     * @var bool
+     */
+    protected $isString;
+
+    /**
+     * Create a new belongs to relationship instance.
+     *
+     * @param  string  $foreignKey
+     * @param  string  $ownerKey
+     * @param  string  $relationName
+     * @param  bool  $isString
+     * @return void
+     */
+    public function __construct(Builder $query, Model $child, $foreignKey, $ownerKey, $relationName, $isString = false)
+    {
+        $this->isString = $isString;
+        parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
+    }
+
     /**
      * Set the base constraints on the relation query.
      *
@@ -16,8 +40,11 @@ class BelongsToArrayColumn extends BelongsTo
         if (static::$constraints) {
             $query = $this->getBaseQuery();
 
-            $query->whereJsonContains($this->ownerKey, $this->getParentKey())
-                ->orWhereJsonContains($this->ownerKey, $this->getParentKey() . '');
+            $query->when($this->isString, function ($q) {
+                $q->whereJsonContains($this->ownerKey, (string) $this->getParentKey());
+            }, function ($q) {
+                $q->whereJsonContains($this->ownerKey, $this->getParentKey());
+            });
 
             $query->whereNotNull($this->ownerKey);
         }
@@ -26,7 +53,6 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Set the constraints for an eager load of the relation.
      *
-     * @param  array  $models
      * @return void
      */
     public function addEagerConstraints(array $models)
@@ -34,8 +60,11 @@ class BelongsToArrayColumn extends BelongsTo
         $ids = $this->getEagerModelKeys($models);
         $this->query->where(function ($q) use ($ids) {
             foreach ($ids as $id) {
-                $q->orWhereJsonContains($this->ownerKey, $id)
-                    ->orWhereJsonContains($this->ownerKey, $id . '');
+                $q->when($this->isString, function ($q) use ($id) {
+                    $q->orWhereJsonContains($this->ownerKey, (string) $id);
+                }, function ($q) use ($id) {
+                    $q->orWhereJsonContains($this->ownerKey, $id);
+                });
             }
         });
     }
@@ -43,7 +72,6 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Match the eagerly loaded results to their many parents.
      *
-     * @param  array  $models
      * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @param  string  $relation
      * @return array
@@ -55,8 +83,9 @@ class BelongsToArrayColumn extends BelongsTo
             $id = $model->getAttribute($this->foreignKey);
             $collection = collect();
             foreach ($results as $data) {
-                if (in_array($id, $data->{$owner}))
+                if (in_array($id, $data->{$owner})) {
                     $collection->push($data);
+                }
             }
             $model->setRelation($relation, $collection);
         }
