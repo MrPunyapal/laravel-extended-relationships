@@ -7,7 +7,7 @@
 ### What is a need of extended relationships?
 The laravel-extended-relationships package provides additional, more efficient relationship methods for Laravel Eloquent models. The package offers several useful features such as reducing the number of database queries, improving performance, and minimizing duplicate code.
   
-I faced issue and made my own relationships then realise if I can use packages from open source then I can make one too and made this package.
+I faced issue and made my own relationships then realize if I can use packages from open source then I can make one too and made this package.
 
 ## Installation
 
@@ -39,9 +39,9 @@ Next, define the `BelongsToManyKeys` relationship with the `belongsToManyKeys` m
 
 public function auditors() {
     return $this->belongsToManyKeys(
-        User::class,
-        'id',
-        [
+        related: User::class,
+        foreignKey: 'id',
+        relations: [
             'created_by' => 'creator',
             'updated_by' => 'updater',
             'deleted_by' => 'deleter',
@@ -105,13 +105,13 @@ class User extends Model{
 
     public function audited(){
         return $this->hasManyKeys(
-            Post::class,
-            [
+            related: Post::class,
+            relations: [
                 'created_by' => 'created', 
                 'updated_by' => 'updated', 
                 'deleted_by' => 'deleted',
             ],
-            'id'
+            localKey: 'id'
         );
     }
 }
@@ -169,9 +169,9 @@ class User extends Model
     public function myCompanies()
     {
         return $this->hasManyArrayColumn(
-             Company::class,
-             'id',
-             'companies'
+            related: Company::class,
+            foreignKey: 'id',
+            localKey: 'companies'
         );
     }
 }
@@ -193,7 +193,10 @@ This allows you to easily retrieve related records with an array of local keys, 
 
 ### Inverse Relationship for `HasManyArrayColumn`
 
-The `BelongsToArrayColumn` method allows you to define a relationship between a model and an array column on another model. Here's an example:
+The `BelongsToArrayColumn` method allows you to define a relationship between a model and an array column on another model. 
+if you have ["7", "71"] in array column and int 7 or 71 at your foreign-key then pass `$isString` flag as true to get expected results.
+
+Here's an example:
 
 ```php
 
@@ -206,10 +209,11 @@ class Company extends Model
     public function companyFounders()
     {
         return $this->belongsToArrayColumn(
-            User::class,
-            'id',
-            'companies',
-            true // optional, default is false (if true then it treats all values as string)
+            related: User::class,
+            foreignKey: 'id',
+            localKey: 'companies',
+            // optional, default is false (if true then it treats all values as string)
+            isString: true 
         );
     }
 }
