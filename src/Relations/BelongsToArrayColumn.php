@@ -3,34 +3,28 @@
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BelongsToArrayColumn extends BelongsTo
 {
     /**
-     * Create a new belongs to relationship instance.
-     *
-     * @param  string  $foreignKey
-     * @param  string  $ownerKey
-     * @param  string  $relationName
-     * @param  bool  $isString
-     * @return void
+     * Create a new belongs to array Column relationship instance.
      */
-    public function __construct(Builder $query, Model $child, $foreignKey, $ownerKey, $relationName, /**
-     * Indicates whether the value is a string.
-     */
-        protected $isString = false)
+    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, string $relationName,
+        /**
+         * Indicates whether the value is a string.
+         */
+        protected bool $isString = false)
     {
         parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
     }
 
     /**
      * Set the base constraints on the relation query.
-     *
-     * @return void
      */
-    public function addConstraints()
+    public function addConstraints(): void
     {
         if (static::$constraints) {
             $query = $this->getBaseQuery();
@@ -47,10 +41,8 @@ class BelongsToArrayColumn extends BelongsTo
 
     /**
      * Set the constraints for an eager load of the relation.
-     *
-     * @return void
      */
-    public function addEagerConstraints(array $models)
+    public function addEagerConstraints(array $models): void
     {
         $ids = $this->getEagerModelKeys($models);
         $this->query->where(function ($q) use ($ids) {
@@ -67,11 +59,9 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Match the eagerly loaded results to their many parents.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @param  string  $relation
-     * @return array
      */
-    public function match(array $models, $results, $relation)
+    public function match(array $models, Collection $results, $relation): array|Collection
     {
         $owner = $this->getOwnerKeyName();
         foreach ($models as $model) {
@@ -90,10 +80,8 @@ class BelongsToArrayColumn extends BelongsTo
 
     /**
      * Get the results of the relationship.
-     *
-     * @return mixed
      */
-    public function getResults()
+    public function getResults(): mixed
     {
         return $this->query->get();
     }
