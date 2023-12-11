@@ -12,23 +12,21 @@ class HasManyKeys extends Relation
     /**
      * The foreign keys of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $foreignKeys;
+    protected array $foreignKeys;
 
     /**
-     * The foreign keys of the parent model.
+     * The relations of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $relations;
+    protected array $relations;
 
     /**
      * The local key of the parent model.
-     *
-     * @var string
      */
-    protected $localKey;
+    protected string $localKey;
 
     /**
      * Create a new has one or many relationship instance.
@@ -82,9 +80,8 @@ class HasManyKeys extends Relation
      * Initialize the relation on a set of models.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function initRelation(array $models, $relation)
+    public function initRelation(array $models, $relation): array
     {
         foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
@@ -98,9 +95,8 @@ class HasManyKeys extends Relation
      * Info: From HasMany class.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function match(array $models, Collection $results, $relation)
+    public function match(array $models, Collection $results, $relation): array
     {
         $dictionary = $this->buildDictionary($results);
 
@@ -121,12 +117,9 @@ class HasManyKeys extends Relation
     /**
      * Build model dictionary keyed by the relation's foreign key.
      * Note: Custom code.
-     *
-     * @param  Collection  $results
      */
     protected function buildDictionary(Collection $models): array
     {
-        // dd($models);
         $dictionary = [];
         foreach ($models as $model) {
             foreach ($this->foreignKeys as $foreignKey) {
@@ -140,20 +133,16 @@ class HasManyKeys extends Relation
     /**
      * Get the key value of the parent's local key.
      * Info: From HasOneOrMany class.
-     *
-     * @return mixed
      */
-    public function getParentKey()
+    public function getParentKey(): mixed
     {
         return $this->parent->getAttribute($this->localKey);
     }
 
     /**
      * Get the results of the relationship.
-     *
-     * @return mixed
      */
-    public function getResults()
+    public function getResults(): mixed
     {
         if (! static::$constraints) {
             return $this->get();
