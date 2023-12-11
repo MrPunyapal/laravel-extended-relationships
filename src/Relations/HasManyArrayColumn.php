@@ -9,10 +9,8 @@ class HasManyArrayColumn extends HasMany
 {
     /**
      * Set the base constraints on the relation query.
-     *
-     * @return void
      */
-    public function addConstraints()
+    public function addConstraints(): void
     {
         if (static::$constraints) {
             $query = $this->getRelationQuery();
@@ -25,10 +23,8 @@ class HasManyArrayColumn extends HasMany
 
     /**
      * Set the constraints for an eager load of the relation.
-     *
-     * @return void
      */
-    public function addEagerConstraints(array $models)
+    public function addEagerConstraints(array $models): void
     {
         $this->query->whereIn($this->foreignKey, $this->getKeys($models, $this->localKey));
     }
@@ -37,9 +33,8 @@ class HasManyArrayColumn extends HasMany
      * Get the Keys for an eager load of the relation.
      *
      * @param  string|null  $key
-     * @return void
      */
-    protected function getKeys(array $models, $key = null)
+    protected function getKeys(array $models, $key = null): array
     {
         $keys = [];
         collect($models)->each(function ($value) use ($key, &$keys) {
@@ -53,11 +48,9 @@ class HasManyArrayColumn extends HasMany
      * Match the eagerly loaded results to their many parents.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function matchMany(array $models, Collection $results, $relation)
+    public function matchMany(array $models, Collection $results, $relation): array|Collection
     {
-
         $foreign = $this->getForeignKeyName();
 
         $dictionary = $results->mapToDictionary(fn ($result) => [$result->{$foreign} => $result])->all();
