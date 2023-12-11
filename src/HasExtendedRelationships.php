@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mrpunyapal\LaravelExtendedRelationships;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
@@ -11,29 +12,28 @@ use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 
 trait HasExtendedRelationships
 {
-    /**
-     * @param  string[]|null  $relations
-     */
     public function belongsToManyKeys(string $related, ?string $foreignKey, ?array $relations): BelongsToManyKeys
     {
-        return new BelongsToManyKeys((new $related())->newQuery(), $this, $foreignKey, $relations);
+        return new BelongsToManyKeys($this->relatedNewQuery($related), $this, $foreignKey, $relations);
     }
 
-    /**
-     * @param  string[]|null  $relations
-     */
     public function hasManyKeys(string $related, ?array $relations, ?string $localKey): HasManyKeys
     {
-        return new HasManyKeys((new $related())->newQuery(), $this, $relations, $localKey);
+        return new HasManyKeys($this->relatedNewQuery($related), $this, $relations, $localKey);
     }
 
     public function hasManyArrayColumn(string $related, ?string $foreignKey, ?string $localKey): HasManyArrayColumn
     {
-        return new HasManyArrayColumn((new $related())->newQuery(), $this, $foreignKey, $localKey);
+        return new HasManyArrayColumn($this->relatedNewQuery($related), $this, $foreignKey, $localKey);
     }
 
     public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey, bool $isString = false): BelongsToArrayColumn
     {
-        return new BelongsToArrayColumn((new $related())->newQuery(), $this, $foreignKey, $localKey, null, $isString);
+        return new BelongsToArrayColumn($this->relatedNewQuery($related), $this, $foreignKey, $localKey, null, $isString);
+    }
+
+    protected function relatedNewQuery($related): Builder
+    {
+        return (new $related())->newQuery();
     }
 }
