@@ -9,13 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class BelongsToArrayColumn extends BelongsTo
 {
     /**
-     * Indicates whether the value is a string.
-     *
-     * @var bool
-     */
-    protected $isString;
-
-    /**
      * Create a new belongs to relationship instance.
      *
      * @param  string  $foreignKey
@@ -24,9 +17,11 @@ class BelongsToArrayColumn extends BelongsTo
      * @param  bool  $isString
      * @return void
      */
-    public function __construct(Builder $query, Model $child, $foreignKey, $ownerKey, $relationName, $isString = false)
+    public function __construct(Builder $query, Model $child, $foreignKey, $ownerKey, $relationName, /**
+     * Indicates whether the value is a string.
+     */
+    protected $isString = false)
     {
-        $this->isString = $isString;
         parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
     }
 
