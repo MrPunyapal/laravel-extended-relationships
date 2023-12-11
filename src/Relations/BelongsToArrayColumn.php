@@ -24,17 +24,18 @@ class BelongsToArrayColumn extends BelongsTo
      */
     public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $query = $this->getBaseQuery();
-
-            $query->when($this->isString, function ($q) {
-                $q->whereJsonContains($this->ownerKey, (string) $this->getParentKey());
-            }, function ($q) {
-                $q->whereJsonContains($this->ownerKey, $this->getParentKey());
-            });
-
-            $query->whereNotNull($this->ownerKey);
+        if (! static::$constraints) {
+            return;
         }
+        $query = $this->getBaseQuery();
+
+        $query->when($this->isString, function ($q) {
+            $q->whereJsonContains($this->ownerKey, (string) $this->getParentKey());
+        }, function ($q) {
+            $q->whereJsonContains($this->ownerKey, $this->getParentKey());
+        });
+
+        $query->whereNotNull($this->ownerKey);
     }
 
     /**

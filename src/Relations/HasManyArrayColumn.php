@@ -14,13 +14,14 @@ class HasManyArrayColumn extends HasMany
      */
     public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $query = $this->getRelationQuery();
-
-            $query->wherein($this->foreignKey, $this->getParentKey());
-
-            $query->whereNotNull($this->foreignKey);
+        if (! static::$constraints) {
+            return;
         }
+        $query = $this->getRelationQuery();
+
+        $query->wherein($this->foreignKey, $this->getParentKey());
+
+        $query->whereNotNull($this->foreignKey);
     }
 
     /**

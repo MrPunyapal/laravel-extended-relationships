@@ -41,16 +41,17 @@ class BelongsToManyKeys extends Relation
      */
     public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $this->query->where(function ($query) {
-                foreach ($this->localKeys as $localKey) {
-                    $query->orWhere(function ($query) use ($localKey) {
-                        $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
-                            ->whereNotNull($this->foreignKey);
-                    });
-                }
-            });
+        if (! static::$constraints) {
+            return;
         }
+        $this->query->where(function ($query) {
+            foreach ($this->localKeys as $localKey) {
+                $query->orWhere(function ($query) use ($localKey) {
+                    $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
+                        ->whereNotNull($this->foreignKey);
+                });
+            }
+        });
     }
 
     /**

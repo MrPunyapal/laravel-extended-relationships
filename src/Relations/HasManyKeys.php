@@ -42,18 +42,19 @@ class HasManyKeys extends Relation
      */
     public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $foreignKeys = $this->foreignKeys;
-
-            $this->query->where(function ($query) use ($foreignKeys): void {
-                foreach ($foreignKeys as $foreignKey) {
-                    $query->orWhere(function ($query) use ($foreignKey): void {
-                        $query->where($foreignKey, '=', $this->getParentKey())
-                            ->whereNotNull($foreignKey);
-                    });
-                }
-            });
+        if (! static::$constraints) {
+            return;
         }
+        $foreignKeys = $this->foreignKeys;
+
+        $this->query->where(function ($query) use ($foreignKeys): void {
+            foreach ($foreignKeys as $foreignKey) {
+                $query->orWhere(function ($query) use ($foreignKey): void {
+                    $query->where($foreignKey, '=', $this->getParentKey())
+                        ->whereNotNull($foreignKey);
+                });
+            }
+        });
     }
 
     /**
