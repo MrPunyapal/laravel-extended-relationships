@@ -20,7 +20,7 @@ class BelongsToArrayColumn extends BelongsTo
     public function __construct(Builder $query, Model $child, $foreignKey, $ownerKey, $relationName, /**
      * Indicates whether the value is a string.
      */
-    protected $isString = false)
+        protected $isString = false)
     {
         parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
     }

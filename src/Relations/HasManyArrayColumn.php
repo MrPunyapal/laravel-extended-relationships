@@ -60,7 +60,7 @@ class HasManyArrayColumn extends HasMany
 
         $foreign = $this->getForeignKeyName();
 
-        $dictionary = $results->mapToDictionary(fn($result) => [$result->{$foreign} => $result])->all();
+        $dictionary = $results->mapToDictionary(fn ($result) => [$result->{$foreign} => $result])->all();
 
         foreach ($models as $model) {
             $ids = $model->getAttribute($this->localKey);
