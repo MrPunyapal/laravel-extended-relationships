@@ -27,15 +27,9 @@ class HasManyKeys extends Relation
 
     /**
      * Create a new has one or many relationship instance.
-     *
-     * @return void
      */
-    public function __construct(Builder $query, Model $parent, array $relations,
-        /**
-         * The local key of the parent model.
-         */
-        protected string $localKey
-    ) {
+    public function __construct(Builder $query, Model $parent, array $relations, protected string $localKey)
+    {
         $this->foreignKeys = array_keys($relations);
         $this->relations = $relations;
 
