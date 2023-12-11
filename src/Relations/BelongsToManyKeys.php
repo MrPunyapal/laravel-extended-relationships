@@ -27,17 +27,9 @@ class BelongsToManyKeys extends Relation
 
     /**
      * Create a new has one or many relationship instance.
-     *
-     * @param  array  $localKeys
-     * @return void
      */
-    public function __construct(Builder $query, Model $parent,
-        /**
-         * The foreign key of the related model.
-         */
-        protected string $foreignKey,
-        array $relations
-    ) {
+    public function __construct(Builder $query, Model $parent, protected string $foreignKey, array $relations)
+    {
         $this->localKeys = array_keys($relations);
         $this->relations = $relations;
         parent::__construct($query, $parent);
