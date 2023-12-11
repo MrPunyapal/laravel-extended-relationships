@@ -86,7 +86,7 @@ class BelongsToManyKeys extends Relation
     /**
      * Match the related models with the given models based on the local keys.
      */
-    public function match(array $models, Collection $results, $relation): array|Collection
+    public function match(array $models, Collection $results, $relation): array
     {
         $dictionary = $this->buildDictionary($results);
 

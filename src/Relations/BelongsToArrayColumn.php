@@ -60,7 +60,7 @@ class BelongsToArrayColumn extends BelongsTo
      *
      * @param  string  $relation
      */
-    public function match(array $models, Collection $results, $relation): array|Collection
+    public function match(array $models, Collection $results, $relation): array
     {
         $owner = $this->getOwnerKeyName();
         foreach ($models as $model) {

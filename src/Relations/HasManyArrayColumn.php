@@ -52,7 +52,7 @@ class HasManyArrayColumn extends HasMany
      *
      * @param  string  $relation
      */
-    public function matchMany(array $models, Collection $results, $relation): array|Collection
+    public function matchMany(array $models, Collection $results, $relation): array
     {
         $foreign = $this->getForeignKeyName();
 
