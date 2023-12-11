@@ -10,37 +10,28 @@ use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 trait HasExtendedRelationships
 {
     /**
-     * @param  string|null  $foreignKey
      * @param  string[]|null  $relations
      */
-    public function belongsToManyKeys(string $related, string $foreignKey, array $relations): BelongsToManyKeys
+    public function belongsToManyKeys(string $related, ?string $foreignKey, ?array $relations): BelongsToManyKeys
     {
-        $instance = new $related();
-
-        return new BelongsToManyKeys($instance->newQuery(), $this, $foreignKey, $relations);
+        return new BelongsToManyKeys((new $related())->newQuery(), $this, $foreignKey, $relations);
     }
 
     /**
      * @param  string[]|null  $relations
      */
-    public function hasManyKeys(string $related, ?array $relations = null, ?string $localKey = null): HasManyKeys
+    public function hasManyKeys(string $related, ?array $relations, ?string $localKey): HasManyKeys
     {
-        $instance = new $related();
-
-        return new HasManyKeys($instance->newQuery(), $this, $relations, $localKey);
+        return new HasManyKeys((new $related())->newQuery(), $this, $relations, $localKey);
     }
 
     public function hasManyArrayColumn(string $related, ?string $foreignKey, ?string $localKey): HasManyArrayColumn
     {
-        $instance = new $related();
-
-        return new HasManyArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey);
+        return new HasManyArrayColumn((new $related())->newQuery(), $this, $foreignKey, $localKey);
     }
 
-    public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey, $isString = false): BelongsToArrayColumn
+    public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey, bool $isString = false): BelongsToArrayColumn
     {
-        $instance = new $related();
-
-        return new BelongsToArrayColumn($instance->newQuery(), $this, $foreignKey, $localKey, null, $isString);
+        return new BelongsToArrayColumn((new $related())->newQuery(), $this, $foreignKey, $localKey, null, $isString);
     }
 }
