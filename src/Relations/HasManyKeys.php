@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;

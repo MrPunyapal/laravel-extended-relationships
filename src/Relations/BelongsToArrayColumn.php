@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -68,7 +70,7 @@ class BelongsToArrayColumn extends BelongsTo
             $id = $model->getAttribute($this->foreignKey);
             $collection = collect();
             foreach ($results as $data) {
-                if (in_array($id, $data->{$owner})) {
+                if (in_array($id, $data->{$owner}, true)) {
                     $collection->push($data);
                 }
             }
