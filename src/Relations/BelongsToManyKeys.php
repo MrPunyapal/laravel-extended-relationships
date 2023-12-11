@@ -34,8 +34,8 @@ class BelongsToManyKeys extends Relation
          * The foreign key of the related model.
          */
         protected string $foreignKey,
-        array $relations)
-    {
+        array $relations
+    ) {
         $this->localKeys = array_keys($relations);
         $this->relations = $relations;
         parent::__construct($query, $parent);

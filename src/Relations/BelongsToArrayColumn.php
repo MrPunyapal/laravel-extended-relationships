@@ -16,8 +16,8 @@ class BelongsToArrayColumn extends BelongsTo
         /**
          * Indicates whether the value is a string.
          */
-        protected bool $isString = false)
-    {
+        protected bool $isString = false
+    ) {
         parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
     }
 
