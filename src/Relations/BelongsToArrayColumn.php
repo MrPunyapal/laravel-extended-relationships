@@ -12,7 +12,7 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Create a new belongs to array Column relationship instance.
      */
-    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, string $relationName,
+    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, ?string $relationName,
         /**
          * Indicates whether the value is a string.
          */
