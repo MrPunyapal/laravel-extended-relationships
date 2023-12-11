@@ -14,12 +14,8 @@ class BelongsToArrayColumn extends BelongsTo
     /**
      * Create a new belongs to array Column relationship instance.
      */
-    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, ?string $relationName,
-        /**
-         * Indicates whether the value is a string.
-         */
-        protected bool $isString = false
-    ) {
+    public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, ?string $relationName, protected bool $isString = false)
+    {
         parent::__construct($query, $child, $foreignKey, $ownerKey, $relationName);
     }
 
