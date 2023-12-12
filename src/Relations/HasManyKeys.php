@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -12,34 +14,24 @@ class HasManyKeys extends Relation
     /**
      * The foreign keys of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $foreignKeys;
+    protected array $foreignKeys;
 
     /**
-     * The foreign keys of the parent model.
+     * The relations of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $relations;
-
-    /**
-     * The local key of the parent model.
-     *
-     * @var string
-     */
-    protected $localKey;
+    protected array $relations;
 
     /**
      * Create a new has one or many relationship instance.
-     *
-     * @return void
      */
-    public function __construct(Builder $query, Model $parent, array $relations, string $localKey)
+    public function __construct(Builder $query, Model $parent, array $relations, protected string $localKey)
     {
         $this->foreignKeys = array_keys($relations);
         $this->relations = $relations;
-        $this->localKey = $localKey;
 
         parent::__construct($query, $parent);
     }
@@ -50,18 +42,19 @@ class HasManyKeys extends Relation
      */
     public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $foreignKeys = $this->foreignKeys;
-
-            $this->query->where(function ($query) use ($foreignKeys): void {
-                foreach ($foreignKeys as $foreignKey) {
-                    $query->orWhere(function ($query) use ($foreignKey): void {
-                        $query->where($foreignKey, '=', $this->getParentKey())
-                            ->whereNotNull($foreignKey);
-                    });
-                }
-            });
+        if (! static::$constraints) {
+            return;
         }
+        $foreignKeys = $this->foreignKeys;
+
+        $this->query->where(function ($query) use ($foreignKeys): void {
+            foreach ($foreignKeys as $foreignKey) {
+                $query->orWhere(function ($query) use ($foreignKey): void {
+                    $query->where($foreignKey, '=', $this->getParentKey())
+                        ->whereNotNull($foreignKey);
+                });
+            }
+        });
     }
 
     /**
@@ -82,9 +75,8 @@ class HasManyKeys extends Relation
      * Initialize the relation on a set of models.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function initRelation(array $models, $relation)
+    public function initRelation(array $models, $relation): array
     {
         foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
@@ -98,9 +90,8 @@ class HasManyKeys extends Relation
      * Info: From HasMany class.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function match(array $models, Collection $results, $relation)
+    public function match(array $models, Collection $results, $relation): array
     {
         $dictionary = $this->buildDictionary($results);
 
@@ -121,12 +112,9 @@ class HasManyKeys extends Relation
     /**
      * Build model dictionary keyed by the relation's foreign key.
      * Note: Custom code.
-     *
-     * @param  Collection  $results
      */
     protected function buildDictionary(Collection $models): array
     {
-        // dd($models);
         $dictionary = [];
         foreach ($models as $model) {
             foreach ($this->foreignKeys as $foreignKey) {
@@ -140,20 +128,16 @@ class HasManyKeys extends Relation
     /**
      * Get the key value of the parent's local key.
      * Info: From HasOneOrMany class.
-     *
-     * @return mixed
      */
-    public function getParentKey()
+    public function getParentKey(): mixed
     {
         return $this->parent->getAttribute($this->localKey);
     }
 
     /**
      * Get the results of the relationship.
-     *
-     * @return mixed
      */
-    public function getResults()
+    public function getResults(): mixed
     {
         if (! static::$constraints) {
             return $this->get();

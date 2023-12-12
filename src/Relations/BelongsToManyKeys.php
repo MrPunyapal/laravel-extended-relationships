@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -12,34 +14,23 @@ class BelongsToManyKeys extends Relation
     /**
      * The local keys of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $localKeys;
+    protected array $localKeys;
 
     /**
      * The local keys of the parent model.
      *
-     * @var string[]
+     * @var array<string>
      */
-    protected $relations;
-
-    /**
-     * The foreign key of the related model.
-     *
-     * @var string
-     */
-    protected $foreignKey;
+    protected array $relations;
 
     /**
      * Create a new has one or many relationship instance.
-     *
-     * @param  array  $localKeys
-     * @return void
      */
-    public function __construct(Builder $query, Model $parent, string $foreignKey, array $relations)
+    public function __construct(Builder $query, Model $parent, protected string $foreignKey, array $relations)
     {
         $this->localKeys = array_keys($relations);
-        $this->foreignKey = $foreignKey;
         $this->relations = $relations;
         parent::__construct($query, $parent);
     }
@@ -47,28 +38,27 @@ class BelongsToManyKeys extends Relation
     /**
      * Set the base constraints on the relation query.
      * Note: Used to load relations of one model.
-     *
-     * @return void
      */
-    public function addConstraints()
+    public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $this->query->where(function ($query) {
-                foreach ($this->localKeys as $localKey) {
-                    $query->orWhere(function ($query) use ($localKey) {
-                        $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
-                            ->whereNotNull($this->foreignKey);
-                    });
-                }
-            });
+        if (! static::$constraints) {
+            return;
         }
+        $this->query->where(function ($query) {
+            foreach ($this->localKeys as $localKey) {
+                $query->orWhere(function ($query) use ($localKey) {
+                    $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
+                        ->whereNotNull($this->foreignKey);
+                });
+            }
+        });
     }
 
     /**
      * Set the constraints for an eager load of the relation.
      * Note: Used to load relations of multiple models at once.
      */
-    public function addEagerConstraints(array $models)
+    public function addEagerConstraints(array $models): void
     {
         $localKeys = $this->localKeys;
         $foreignKey = $this->foreignKey;
@@ -83,9 +73,8 @@ class BelongsToManyKeys extends Relation
      * Initialize the relation on a set of models.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function initRelation(array $models, $relation)
+    public function initRelation(array $models, $relation): array|Collection
     {
         foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
@@ -94,7 +83,10 @@ class BelongsToManyKeys extends Relation
         return $models;
     }
 
-    public function match(array $models, Collection $results, $relation)
+    /**
+     * Match the related models with the given models based on the local keys.
+     */
+    public function match(array $models, Collection $results, $relation): array
     {
         $dictionary = $this->buildDictionary($results);
 
@@ -112,7 +104,10 @@ class BelongsToManyKeys extends Relation
         return $models;
     }
 
-    public function buildDictionary(Collection $models)
+    /**
+     * Build a dictionary using the given models.
+     */
+    public function buildDictionary(Collection $models): array|Collection
     {
         $dictionary = [];
         foreach ($models as $model) {
@@ -122,17 +117,18 @@ class BelongsToManyKeys extends Relation
         return $dictionary;
     }
 
-    public function getParentKey($localKey)
+    /**
+     * Get the parent key value for the given local key.
+     */
+    public function getParentKey(string $localKey): mixed
     {
         return $this->parent->getAttribute($localKey);
     }
 
     /**
      * Get the results of the relationship.
-     *
-     * @return mixed
      */
-    public function getResults()
+    public function getResults(): mixed
     {
         if (! static::$constraints) {
             return $this->query->get();

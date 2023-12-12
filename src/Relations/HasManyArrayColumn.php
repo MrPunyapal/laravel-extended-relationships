@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mrpunyapal\LaravelExtendedRelationships\Relations;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -9,26 +11,23 @@ class HasManyArrayColumn extends HasMany
 {
     /**
      * Set the base constraints on the relation query.
-     *
-     * @return void
      */
-    public function addConstraints()
+    public function addConstraints(): void
     {
-        if (static::$constraints) {
-            $query = $this->getRelationQuery();
-
-            $query->wherein($this->foreignKey, $this->getParentKey());
-
-            $query->whereNotNull($this->foreignKey);
+        if (! static::$constraints) {
+            return;
         }
+        $query = $this->getRelationQuery();
+
+        $query->wherein($this->foreignKey, $this->getParentKey());
+
+        $query->whereNotNull($this->foreignKey);
     }
 
     /**
      * Set the constraints for an eager load of the relation.
-     *
-     * @return void
      */
-    public function addEagerConstraints(array $models)
+    public function addEagerConstraints(array $models): void
     {
         $this->query->whereIn($this->foreignKey, $this->getKeys($models, $this->localKey));
     }
@@ -37,9 +36,8 @@ class HasManyArrayColumn extends HasMany
      * Get the Keys for an eager load of the relation.
      *
      * @param  string|null  $key
-     * @return void
      */
-    protected function getKeys(array $models, $key = null)
+    protected function getKeys(array $models, $key = null): array
     {
         $keys = [];
         collect($models)->each(function ($value) use ($key, &$keys) {
@@ -53,16 +51,12 @@ class HasManyArrayColumn extends HasMany
      * Match the eagerly loaded results to their many parents.
      *
      * @param  string  $relation
-     * @return array
      */
-    public function matchMany(array $models, Collection $results, $relation)
+    public function matchMany(array $models, Collection $results, $relation): array
     {
-
         $foreign = $this->getForeignKeyName();
 
-        $dictionary = $results->mapToDictionary(function ($result) use ($foreign) {
-            return [$result->{$foreign} => $result];
-        })->all();
+        $dictionary = $results->mapToDictionary(fn ($result) => [$result->{$foreign} => $result])->all();
 
         foreach ($models as $model) {
             $ids = $model->getAttribute($this->localKey);
