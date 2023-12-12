@@ -74,7 +74,7 @@ class BelongsToManyKeys extends Relation
      *
      * @param  string  $relation
      */
-    public function initRelation(array $models, $relation): array|Collection
+    public function initRelation(array $models, $relation): array
     {
         foreach ($models as $model) {
             $model->setRelation($relation, $this->related->newCollection());
@@ -107,7 +107,7 @@ class BelongsToManyKeys extends Relation
     /**
      * Build a dictionary using the given models.
      */
-    public function buildDictionary(Collection $models): array|Collection
+    public function buildDictionary(Collection $models): array
     {
         $dictionary = [];
         foreach ($models as $model) {
