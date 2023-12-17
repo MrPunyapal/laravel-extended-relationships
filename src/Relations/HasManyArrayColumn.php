@@ -17,9 +17,10 @@ class HasManyArrayColumn extends HasMany
         if (! static::$constraints) {
             return;
         }
+
         $query = $this->getRelationQuery();
 
-        $query->wherein($this->foreignKey, $this->getParentKey());
+        $query->whereIn($this->foreignKey, $this->getParentKey());
 
         $query->whereNotNull($this->foreignKey);
     }
@@ -40,6 +41,7 @@ class HasManyArrayColumn extends HasMany
     protected function getKeys(array $models, $key = null): array
     {
         $keys = [];
+
         collect($models)->each(function ($value) use ($key, &$keys) {
             $keys = array_merge($keys, $value->getAttribute($key));
         });
@@ -66,6 +68,7 @@ class HasManyArrayColumn extends HasMany
                     $collection = $collection->merge($this->getRelationValue($dictionary, $id, 'many'));
                 }
             }
+
             $model->setRelation($relation, $collection);
         }
 

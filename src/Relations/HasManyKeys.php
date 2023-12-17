@@ -45,6 +45,7 @@ class HasManyKeys extends Relation
         if (! static::$constraints) {
             return;
         }
+
         $foreignKeys = $this->foreignKeys;
 
         $this->query->where(function ($query) use ($foreignKeys): void {
