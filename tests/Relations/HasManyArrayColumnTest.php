@@ -41,11 +41,11 @@ it('models are properly matched to parents', function (): void {
 
 function getRelation()
 {
-    $queryBuilder = mock(QueryBuilder::class);
-    $eloquentBuilder = mock(EloquentBuilder::class, [$queryBuilder]);
+    $queryBuilder = Mockery::mock(QueryBuilder::class);
+    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
 
-    $parent = mock(Model::class);
-    $related = mock(Model::class);
+    $parent = Mockery::mock(Model::class);
+    $related = Mockery::mock(Model::class);
 
     $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
     $eloquentBuilder->shouldReceive('whereIn')->with('foreign_key', [1, 2]);
