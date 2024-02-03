@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mrpunyapal\LaravelExtendedRelationships;
 
-use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
