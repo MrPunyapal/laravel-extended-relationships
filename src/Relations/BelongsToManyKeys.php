@@ -64,7 +64,7 @@ class BelongsToManyKeys extends Relation
         $foreignKey = $this->foreignKey;
         $desireValues = [];
         foreach ($localKeys as $localKey) {
-            $desireValues = array_merge($desireValues, $this->getKeys($models, $localKey) ?? []);
+            $desireValues = array_merge($desireValues, $this->getKeys($models, $localKey));
         }
         $this->query->whereIn($foreignKey, array_filter(array_unique($desireValues)));
     }
