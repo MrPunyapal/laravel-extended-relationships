@@ -20,9 +20,22 @@ class HasManyArrayColumn extends HasMany
 
         $query = $this->getRelationQuery();
 
-        $query->whereIn($this->foreignKey, $this->getParentKey());
+        $parentKeys = $this->getParentKey();
+        if (! empty($parentKeys)) {
+            $query->whereIn($this->foreignKey, $parentKeys);
+        }
 
         $query->whereNotNull($this->foreignKey);
+    }
+
+    /**
+     * Get the parent key(s) for the relationship.
+     */
+    public function getParentKey(): array
+    {
+        $attribute = $this->parent->getAttribute($this->localKey);
+
+        return is_array($attribute) ? $attribute : [];
     }
 
     /**
@@ -43,10 +56,13 @@ class HasManyArrayColumn extends HasMany
         $keys = [];
 
         collect($models)->each(function ($value) use ($key, &$keys) {
-            $keys = array_merge($keys, $value->getAttribute($key));
+            $attribute = $value->getAttribute($key);
+            if (is_array($attribute)) {
+                $keys = array_merge($keys, $attribute);
+            }
         });
 
-        return array_unique($keys);
+        return array_values(array_unique($keys));
     }
 
     /**

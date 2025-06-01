@@ -34,6 +34,6 @@ trait HasExtendedRelationships
 
     protected function relatedNewQuery($related): Builder
     {
-        return (new $related())->newQuery();
+        return (new $related)->newQuery();
     }
 }

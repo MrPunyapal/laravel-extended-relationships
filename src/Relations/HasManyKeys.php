@@ -114,7 +114,7 @@ class HasManyKeys extends Relation
      * Build model dictionary keyed by the relation's foreign key.
      * Note: Custom code.
      */
-    protected function buildDictionary(Collection $models): array
+    public function buildDictionary(Collection $models): array
     {
         $dictionary = [];
         foreach ($models as $model) {
