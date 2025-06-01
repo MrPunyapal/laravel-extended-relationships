@@ -2,248 +2,122 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('can create a belongs to array column relationship', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
+it('gets results correctly with actual database data', function () {
+    // Create a company first
+    $company = Company::create(['id' => 1, 'name' => 'Test Company']);
 
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
+    // Create users that reference this company in their company_ids arrays
+    User::create(['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com', 'company_ids' => [1, 3]]);
+    User::create(['id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com', 'company_ids' => [1, 2]]);
+    User::create(['id' => 3, 'name' => 'Bob Wilson', 'email' => 'bob@example.com', 'company_ids' => [2, 3]]);
 
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        false
-    );
-
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
-});
-
-it('can create a belongs to array column relationship with string flag', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        true
-    );
-
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
-});
-
-it('gets owner key name correctly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'owner_id',
-        'user_ids',
-        null,
-        false
-    );
-
-    $ownerKey = $relation->getOwnerKeyName();
-
-    expect($ownerKey)->toBe('user_ids');
-});
-
-it('adds constraints properly without string flag', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $child->shouldReceive('getAttribute')->with('owner_id')->andReturn(1);
-    $queryBuilder->shouldReceive('when')->twice()->with(false, Mockery::type('Closure'), Mockery::type('Closure'));
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->twice();
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'owner_id',
-        'user_ids',
-        null,
-        false
-    );
-
-    $relation->addConstraints();
-
-    expect(true)->toBeTrue(); // If we reach here, constraints were added successfully
-});
-
-it('adds constraints properly with string flag', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $child->shouldReceive('getAttribute')->with('id')->andReturn(1);
-    $queryBuilder->shouldReceive('when')->twice()->with(true, Mockery::type('Closure'), Mockery::type('Closure'));
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->twice();
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        true
-    );
-
-    $relation->addConstraints();
-
-    expect(true)->toBeTrue(); // If we reach here, constraints were added successfully
-});
-
-it('adds eager constraints properly without string flag', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder); // Constructor call
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
-
-    // Mock the where call to execute the closure
-    $eloquentBuilder->shouldReceive('where')->once()->with(Mockery::type('Closure'))->andReturnUsing(function ($closure) use ($queryBuilder) {
-        // Create a mock query for the closure to use
-        $mockQuery = Mockery::mock(QueryBuilder::class);
-        $mockQuery->shouldReceive('when')->twice()->with(false, Mockery::type('Closure'), Mockery::type('Closure'))->andReturnUsing(function ($condition, $trueCallback, $falseCallback) use ($mockQuery) {
-            if (! $condition) {
-                $falseCallback($mockQuery);
-            } else {
-                $trueCallback($mockQuery);
-            }
-
-            return $mockQuery;
-        });
-        $mockQuery->shouldReceive('orWhereJsonContains')->twice();
-
-        // Execute the closure with our mock
-        $closure($mockQuery);
-
-        return $queryBuilder;
-    });
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        false
-    );
-
-    $model1 = Mockery::mock(Company::class);
-    $model1->shouldReceive('getAttribute')->with('id')->andReturn(1);
-
-    $model2 = Mockery::mock(Company::class);
-    $model2->shouldReceive('getAttribute')->with('id')->andReturn(2);
-
-    $relation->addEagerConstraints([$model1, $model2]);
-
-    expect(true)->toBeTrue(); // If we reach here, eager constraints were added successfully
-});
-
-it('matches models properly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        false
-    );
-
-    $user1 = new User(['id' => 1, 'user_ids' => [1, 2]]);
-    $user2 = new User(['id' => 2, 'user_ids' => [2, 3]]);
-    $user3 = new User(['id' => 3, 'user_ids' => [4, 5]]);
-
-    $company1 = new Company(['id' => 1]);
-    $company2 = new Company(['id' => 2]);
-    $company3 = new Company(['id' => 6]); // No user has 6 in their user_ids
-
-    $results = new Collection([$user1, $user2, $user3]);
-    $models = $relation->match([$company1, $company2, $company3], $results, 'users');
-
-    expect($models[0]->users)->toHaveCount(1)
-        ->and($models[0]->users->first()->id)->toBe(1)
-        ->and($models[1]->users)->toHaveCount(2)
-        ->and($models[1]->users->pluck('id')->toArray())->toBe([1, 2])
-        ->and($models[2]->users)->toHaveCount(0);
-});
-
-it('gets results correctly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $child = Mockery::mock(Company::class);
-    $related = Mockery::mock(User::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getQuery')->andReturn($queryBuilder);
-    $eloquentBuilder->shouldReceive('get')->andReturn(new Collection([]));
-    $queryBuilder->shouldReceive('when')->once()->andReturn($queryBuilder);
-    $queryBuilder->shouldReceive('whereNotNull')->with('user_ids')->andReturn($queryBuilder);
-
-    $relation = new BelongsToArrayColumn(
-        $eloquentBuilder,
-        $child,
-        'id',
-        'user_ids',
-        null,
-        false
-    );
-
+    // Use the relationship to find users that have this company in their company_ids
+    $relation = $company->belongsToArrayColumn(User::class, 'id', 'company_ids');
     $results = $relation->getResults();
 
-    expect($results)->toBeInstanceOf(Collection::class);
+    expect($results)->toBeInstanceOf(Collection::class)
+        ->and($results)->toHaveCount(2)
+        ->and($results->pluck('name')->sort()->values()->toArray())->toBe(['Jane Smith', 'John Doe']);
+});
+
+it('works with string flag for mixed data types', function () {
+    $company = Company::create(['id' => 1, 'name' => 'String Company']);
+
+    // Create users with string IDs in their company_ids arrays
+    User::create(['id' => 1, 'name' => 'Alice', 'email' => 'alice@example.com', 'company_ids' => ['1', '2']]);
+    User::create(['id' => 2, 'name' => 'Bob', 'email' => 'bob@example.com', 'company_ids' => [1, 3]]);
+
+    $relation = $company->belongsToArrayColumn(User::class, 'id', 'company_ids', true);
+    $results = $relation->getResults();
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()->name)->toBe('Alice');
+});
+
+it('matches models with actual database data', function () {
+    // Create companies first
+    $company1 = Company::create(['id' => 1, 'name' => 'Company A']);
+    $company2 = Company::create(['id' => 2, 'name' => 'Company B']);
+    $company3 = Company::create(['id' => 3, 'name' => 'Company C']);
+
+    // Create users that reference these companies in their company_ids arrays
+    User::create(['id' => 1, 'name' => 'Alice Johnson', 'email' => 'alice@example.com', 'company_ids' => [1, 2]]);
+    User::create(['id' => 2, 'name' => 'Charlie Brown', 'email' => 'charlie@example.com', 'company_ids' => [2, 3]]);
+    User::create(['id' => 3, 'name' => 'Diana Prince', 'email' => 'diana@example.com', 'company_ids' => [999]]); // References non-existent company
+
+    $relation = new BelongsToArrayColumn(
+        User::query(),
+        new Company,
+        'id',
+        'company_ids',
+        null,
+        false
+    );
+
+    // Get actual users from database
+    $users = User::whereIn('id', [1, 2, 3])->get();
+
+    $models = $relation->match([$company1, $company2, $company3], $users, 'employees');
+
+    expect($models[0]->employees)->toHaveCount(1)
+        ->and($models[0]->employees->pluck('name')->toArray())->toBe(['Alice Johnson'])
+        ->and($models[1]->employees)->toHaveCount(2)
+        ->and($models[1]->employees->pluck('name')->toArray())->toBe(['Alice Johnson', 'Charlie Brown'])
+        ->and($models[2]->employees)->toHaveCount(1)
+        ->and($models[2]->employees->pluck('name')->toArray())->toBe(['Charlie Brown']);
+});
+
+it('works with eager loading in database', function () {
+    // Create companies
+    $company1 = Company::create(['id' => 1, 'name' => 'Tech Corp']);
+    $company2 = Company::create(['id' => 2, 'name' => 'Design Studio']);
+
+    // Create users that reference these companies
+    User::create(['id' => 1, 'name' => 'Alice', 'email' => 'alice@example.com', 'company_ids' => [1]]);
+    User::create(['id' => 2, 'name' => 'Bob', 'email' => 'bob@example.com', 'company_ids' => [1, 2]]);
+    User::create(['id' => 3, 'name' => 'Charlie', 'email' => 'charlie@example.com', 'company_ids' => [2]]);
+    User::create(['id' => 4, 'name' => 'David', 'email' => 'david@example.com', 'company_ids' => [3]]); // Won't match
+
+    // Use the proper way to test eager loading - through the actual relationship
+    $companies = Company::with(['employees' => function ($query) {
+        $query->orderBy('name');
+    }])->get();
+
+    expect($companies)->toHaveCount(2);
+    expect($companies[0]->employees)->toHaveCount(2) // Company 1 has Alice and Bob
+        ->and($companies[0]->employees->pluck('name')->toArray())->toBe(['Alice', 'Bob']);
+    expect($companies[1]->employees)->toHaveCount(2) // Company 2 has Bob and Charlie
+        ->and($companies[1]->employees->pluck('name')->toArray())->toBe(['Bob', 'Charlie']);
+});
+
+it('handles empty arrays gracefully', function () {
+    $company = Company::create(['id' => 1, 'name' => 'Empty Company']);
+
+    // Create users with empty or null company_ids
+    User::create(['id' => 1, 'name' => 'Alice', 'email' => 'alice@example.com', 'company_ids' => []]);
+    User::create(['id' => 2, 'name' => 'Bob', 'email' => 'bob@example.com', 'company_ids' => null]);
+
+    $relation = $company->belongsToArrayColumn(User::class, 'id', 'company_ids');
+    $results = $relation->getResults();
+
+    expect($results)->toHaveCount(0);
+});
+
+it('handles null json values gracefully', function () {
+    $company = Company::create(['id' => 1, 'name' => 'Test Company']);
+
+    // Create user with null company_ids (this should be excluded by whereNotNull constraint)
+    User::create(['id' => 1, 'name' => 'Alice', 'email' => 'alice@example.com', 'company_ids' => null]);
+    User::create(['id' => 2, 'name' => 'Bob', 'email' => 'bob@example.com', 'company_ids' => [1]]);
+
+    $relation = $company->belongsToArrayColumn(User::class, 'id', 'company_ids');
+    $results = $relation->getResults();
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()->name)->toBe('Bob');
 });

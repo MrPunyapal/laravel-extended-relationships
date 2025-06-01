@@ -2,173 +2,116 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('can create a has many array column relationship', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
+it('works with actual database operations', function () {
+    // Create companies
+    Company::create(['id' => 1, 'name' => 'Tech Corp']);
+    Company::create(['id' => 2, 'name' => 'Design Studio']);
+    Company::create(['id' => 3, 'name' => 'Marketing Inc']);
 
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('id')->andReturn($eloquentBuilder);
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([]);
+    // Create users with company associations
+    $user1 = User::create(['id' => 1, 'name' => 'Alice', 'email' => 'alice@example.com', 'companies' => [1, 2]]);
+    $user2 = User::create(['id' => 2, 'name' => 'Bob', 'email' => 'bob@example.com', 'companies' => [2, 3]]);
+    $user3 = User::create(['id' => 3, 'name' => 'Charlie', 'email' => 'charlie@example.com', 'companies' => [999]]); // Non-existent company
 
     $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
+        Company::query(),
+        new User,
         'id',
         'companies'
     );
 
-    expect($relation)->toBeInstanceOf(HasManyArrayColumn::class);
+    // Get actual companies from database
+    $companies = Company::whereIn('id', [1, 2, 3])->get();
+
+    $models = $relation->matchMany([$user1, $user2, $user3], $companies, 'workplaces');
+
+    expect($models[0]->workplaces)->toHaveCount(2)
+        ->and($models[0]->workplaces->pluck('name')->toArray())->toBe(['Tech Corp', 'Design Studio'])
+        ->and($models[1]->workplaces)->toHaveCount(2)
+        ->and($models[1]->workplaces->pluck('name')->toArray())->toBe(['Design Studio', 'Marketing Inc'])
+        ->and($models[2]->workplaces)->toHaveCount(0); // No matching companies for ID 999
 });
 
-it('gets foreign key name correctly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
+it('handles eager loading with database data', function () {
+    // Create companies
+    Company::create(['id' => 10, 'name' => 'Alpha Inc']);
+    Company::create(['id' => 20, 'name' => 'Beta Corp']);
+    Company::create(['id' => 30, 'name' => 'Gamma LLC']);
 
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('company_id')->andReturn($eloquentBuilder);
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([]);
+    // Create users with different company combinations
+    User::create(['id' => 10, 'name' => 'Emma', 'email' => 'emma@example.com', 'companies' => [10, 20]]);
+    User::create(['id' => 20, 'name' => 'Frank', 'email' => 'frank@example.com', 'companies' => [20]]);
+    User::create(['id' => 30, 'name' => 'Grace', 'email' => 'grace@example.com', 'companies' => [10, 30]]);
 
-    $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
-        'company_id',
-        'companies'
-    );
-
-    $foreignKey = $relation->getForeignKeyName();
-
-    expect($foreignKey)->toBe('company_id');
-});
-
-it('gets keys from models correctly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('id')->andReturn($eloquentBuilder);
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([]);
+    // Use actual eager loading through models
+    $users = User::whereIn('id', [10, 20, 30])->get();
 
     $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
+        Company::query(),
+        new User,
         'id',
         'companies'
     );
 
-    $model1 = new User(['companies' => [1, 2]]);
-    $model2 = new User(['companies' => [2, 3]]);
-    $model3 = new User(['companies' => [4]]);
+    $relation->addEagerConstraints($users->all());
+    $companies = $relation->getResults();
 
-    $reflection = new ReflectionClass($relation);
-    $method = $reflection->getMethod('getKeys');
-    $method->setAccessible(true);
-
-    $keys = $method->invoke($relation, [$model1, $model2, $model3], 'companies');
-
-    expect($keys)->toBe([1, 2, 3, 4]);
+    // Should get all companies referenced in user arrays
+    expect($companies)->toHaveCount(3)
+        ->and($companies->pluck('name')->sort()->values()->toArray())->toBe(['Alpha Inc', 'Beta Corp', 'Gamma LLC']);
 });
 
-it('adds constraints properly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
+it('handles empty and null arrays correctly', function () {
+    Company::create(['id' => 100, 'name' => 'Solo Corp']);
 
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('getRelationQuery')->andReturn($eloquentBuilder);
-    $eloquentBuilder->shouldReceive('whereIn')->with('id', [1, 2, 3])->andReturn($eloquentBuilder);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('id')->andReturn($eloquentBuilder);
-
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([1, 2, 3]);
+    // Create users with empty/null company arrays
+    $user1 = User::create(['id' => 100, 'name' => 'Henry', 'email' => 'henry@example.com', 'companies' => []]);
+    $user2 = User::create(['id' => 200, 'name' => 'Iris', 'email' => 'iris@example.com', 'companies' => null]);
 
     $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
+        Company::query(),
+        new User,
         'id',
         'companies'
     );
 
-    $relation->addConstraints();
+    $companies = Company::all();
+    $models = $relation->matchMany([$user1, $user2], $companies, 'workplaces');
 
-    // If we get here without errors, the constraints were added properly
-    expect(true)->toBeTrue();
+    expect($models[0]->workplaces)->toHaveCount(0)
+        ->and($models[1]->workplaces)->toHaveCount(0);
 });
 
-it('adds eager constraints properly', function () {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('id')->andReturn($eloquentBuilder);
-    $eloquentBuilder->shouldReceive('whereIn')->with('id', [1, 2, 3])->andReturn($eloquentBuilder);
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([]);
+it('handles parent key extraction correctly', function () {
+    $user = new User(['companies' => [5, 10, 15]]);
 
     $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
+        Company::query(),
+        $user,
         'id',
         'companies'
     );
 
-    $model1 = Mockery::mock(User::class);
-    $model1->shouldReceive('getAttribute')->with('companies')->andReturn([1, 2]);
+    $parentKeys = $relation->getParentKey();
 
-    $model2 = Mockery::mock(User::class);
-    $model2->shouldReceive('getAttribute')->with('companies')->andReturn([2, 3]);
-
-    $relation->addEagerConstraints([$model1, $model2]);
-
-    expect(true)->toBeTrue();
+    expect($parentKeys)->toBe([5, 10, 15]);
 });
 
-it('models are properly matched to parents', function (): void {
-    $queryBuilder = Mockery::mock(QueryBuilder::class);
-    $eloquentBuilder = Mockery::mock(EloquentBuilder::class, [$queryBuilder]);
-    $parent = Mockery::mock(User::class);
-    $related = Mockery::mock(Company::class);
-
-    $eloquentBuilder->shouldReceive('getModel')->andReturn($related);
-    $eloquentBuilder->shouldReceive('whereNotNull')->with('id')->andReturn($eloquentBuilder);
-    $parent->shouldReceive('getAttribute')->with('companies')->andReturn([]);
-    $related->shouldReceive('newCollection')->andReturnUsing(function ($array) {
-        return new Collection($array);
-    });
+it('handles non-array parent key gracefully', function () {
+    $user = new User(['companies' => 'not-an-array']);
 
     $relation = new HasManyArrayColumn(
-        $eloquentBuilder,
-        $parent,
+        Company::query(),
+        $user,
         'id',
         'companies'
     );
 
-    $result1 = new Company(['id' => 1]);
-    $result2 = new Company(['id' => 2]);
-    $result3 = new Company(['id' => 3]);
+    $parentKeys = $relation->getParentKey();
 
-    $model1 = new User(['companies' => [1]]);
-    $model2 = new User(['companies' => [2, 3]]);
-    $model3 = new User(['companies' => [4]]); // No matching result
-
-    $models = $relation->matchMany([$model1, $model2, $model3], new Collection([$result1, $result2, $result3]), 'myCompanies');
-
-    expect($models[0]->myCompanies)->toHaveCount(1)
-        ->and($models[0]->myCompanies->first()->id)->toBe(1)
-        ->and($models[1]->myCompanies)->toHaveCount(2)
-        ->and($models[1]->myCompanies->pluck('id')->toArray())->toBe([2, 3])
-        ->and($models[2]->myCompanies)->toHaveCount(0);
+    expect($parentKeys)->toBe([]);
 });

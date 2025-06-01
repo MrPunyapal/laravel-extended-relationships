@@ -67,7 +67,8 @@ class BelongsToArrayColumn extends BelongsTo
             $id = $model->getAttribute($this->foreignKey);
             $collection = collect();
             foreach ($results as $data) {
-                if (in_array($id, $data->{$owner}, true)) {
+                $ownerValue = $data->{$owner};
+                if (is_array($ownerValue) && in_array($id, $ownerValue, true)) {
                     $collection->push($data);
                 }
             }

@@ -8,195 +8,67 @@ use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
 use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Post;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Tag;
 use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('can create belongsToManyKeys relationship', function () {
+it('can create all relationship types through trait methods', function () {
     $post = new Post;
-
-    $relation = $post->belongsToManyKeys(
-        User::class,
-        'id',
-        ['created_by' => 'creator', 'updated_by' => 'updater']
-    );
-
-    expect($relation)->toBeInstanceOf(BelongsToManyKeys::class);
-});
-
-it('can create hasManyKeys relationship', function () {
     $user = new User;
-
-    $relation = $user->hasManyKeys(
-        Post::class,
-        ['created_by' => 'created', 'updated_by' => 'updated'],
-        'id'
-    );
-
-    expect($relation)->toBeInstanceOf(HasManyKeys::class);
-});
-
-it('can create hasManyArrayColumn relationship', function () {
-    $user = new User;
-
-    $relation = $user->hasManyArrayColumn(
-        Company::class,
-        'id',
-        'companies'
-    );
-
-    expect($relation)->toBeInstanceOf(HasManyArrayColumn::class);
-});
-
-it('can create belongsToArrayColumn relationship', function () {
     $company = new Company;
 
-    $relation = $company->belongsToArrayColumn(
-        User::class,
-        'id',
-        'user_ids'
-    );
-
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
+    // Test that all relationship methods return correct instances
+    expect($post->belongsToManyKeys(User::class, 'id', ['created_by' => 'creator']))->toBeInstanceOf(BelongsToManyKeys::class)
+        ->and($user->hasManyKeys(Post::class, ['created_by' => 'created'], 'id'))->toBeInstanceOf(HasManyKeys::class)
+        ->and($user->hasManyArrayColumn(Company::class, 'id', 'companies'))->toBeInstanceOf(HasManyArrayColumn::class)
+        ->and($company->belongsToArrayColumn(User::class, 'id', 'user_ids'))->toBeInstanceOf(BelongsToArrayColumn::class)
+        ->and($company->belongsToArrayColumn(User::class, 'id', 'user_ids', true))->toBeInstanceOf(BelongsToArrayColumn::class);
 });
 
-it('can create belongsToArrayColumn relationship with string flag', function () {
-    $company = new Company;
+it('integrates all relationship types with database operations', function () {
+    // Create base entities
+    $author = User::create(['id' => 1000, 'name' => 'Jane Author', 'email' => 'jane@example.com', 'companies' => [1, 2], 'company_ids' => [1, 2]]);
+    $editor = User::create(['id' => 2000, 'name' => 'John Editor', 'email' => 'john@example.com', 'companies' => [2, 3], 'company_ids' => [2, 3]]);
 
-    $relation = $company->belongsToArrayColumn(
-        User::class,
-        'id',
-        'user_ids',
-        true
-    );
+    Company::create(['id' => 1, 'name' => 'Tech Startup']);
+    Company::create(['id' => 2, 'name' => 'Design Agency']);
+    Company::create(['id' => 3, 'name' => 'Consulting Firm']);
 
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
-});
+    $post = Post::create([
+        'id' => 5000,
+        'title' => 'Integration Test Post',
+        'content' => 'Testing all relationships',
+        'created_by' => 1000,
+        'updated_by' => 2000,
+    ]);
 
-it('creates related query correctly', function () {
-    $user = new User;
+    // Test BelongsToManyKeys - post to users
+    $postAuditors = $post->belongsToManyKeys(User::class, 'id', ['created_by' => 'creator', 'updated_by' => 'updater']);
+    $users = User::whereIn('id', [1000, 2000])->get();
+    $matched = $postAuditors->match([$post], $users, 'auditors');
 
-    // Test that relatedNewQuery creates a proper query builder
-    $reflection = new ReflectionClass($user);
-    $method = $reflection->getMethod('relatedNewQuery');
-    $method->setAccessible(true);
+    expect($matched[0]->auditors->creator->name)->toBe('Jane Author')
+        ->and($matched[0]->auditors->updater->name)->toBe('John Editor');
 
-    $query = $method->invoke($user, User::class);
+    // Test HasManyKeys - user to posts
+    $userPosts = $author->hasManyKeys(Post::class, ['created_by' => 'created', 'updated_by' => 'updated'], 'id');
+    $posts = Post::where('id', 5000)->get();
+    $matchedUsers = $userPosts->match([$author, $editor], $posts, 'audited');
 
-    expect($query)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
-});
+    expect($matchedUsers[0]->audited->created)->toHaveCount(1)
+        ->and($matchedUsers[1]->audited->updated)->toHaveCount(1);
 
-it('can define auditors relationship using belongsToManyKeys', function () {
-    $post = new class extends Post
-    {
-        public function auditors()
-        {
-            return $this->belongsToManyKeys(
-                User::class,
-                'id',
-                [
-                    'created_by' => 'creator',
-                    'updated_by' => 'updater',
-                    'deleted_by' => 'deleter',
-                ]
-            );
-        }
-    };
+    // Test HasManyArrayColumn - user to companies
+    $userCompanies = $author->hasManyArrayColumn(Company::class, 'id', 'companies');
+    $companies = Company::whereIn('id', [1, 2, 3])->get();
+    $matchedForCompanies = $userCompanies->matchMany([$author, $editor], $companies, 'workplaces');
 
-    $relation = $post->auditors();
+    expect($matchedForCompanies[0]->workplaces)->toHaveCount(2)
+        ->and($matchedForCompanies[1]->workplaces)->toHaveCount(2);
 
-    expect($relation)->toBeInstanceOf(BelongsToManyKeys::class);
-});
+    // Test BelongsToArrayColumn - company to users (through company_ids)
+    $company = Company::find(2);
+    $companyEmployees = $company->belongsToArrayColumn(User::class, 'id', 'company_ids');
+    $allUsers = User::whereIn('id', [1000, 2000])->get();
+    $matchedEmployees = $companyEmployees->match([$company], $allUsers, 'employees');
 
-it('can define audited relationship using hasManyKeys', function () {
-    $user = new class extends User
-    {
-        public function audited()
-        {
-            return $this->hasManyKeys(
-                Post::class,
-                [
-                    'created_by' => 'created',
-                    'updated_by' => 'updated',
-                    'deleted_by' => 'deleted',
-                ],
-                'id'
-            );
-        }
-    };
-
-    $relation = $user->audited();
-
-    expect($relation)->toBeInstanceOf(HasManyKeys::class);
-});
-
-it('can define companies relationship using hasManyArrayColumn', function () {
-    $user = new class extends User
-    {
-        public function myCompanies()
-        {
-            return $this->hasManyArrayColumn(
-                Company::class,
-                'id',
-                'companies'
-            );
-        }
-    };
-
-    $relation = $user->myCompanies();
-
-    expect($relation)->toBeInstanceOf(HasManyArrayColumn::class);
-});
-
-it('can define founders relationship using belongsToArrayColumn', function () {
-    $company = new class extends Company
-    {
-        public function founders()
-        {
-            return $this->belongsToArrayColumn(
-                User::class,
-                'id',
-                'founder_ids'
-            );
-        }
-    };
-
-    $relation = $company->founders();
-
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
-});
-
-it('can define tags relationship using hasManyArrayColumn', function () {
-    $post = new class extends Post
-    {
-        public function tags()
-        {
-            return $this->hasManyArrayColumn(
-                Tag::class,
-                'id',
-                'tag_ids'
-            );
-        }
-    };
-
-    $relation = $post->tags();
-
-    expect($relation)->toBeInstanceOf(HasManyArrayColumn::class);
-});
-
-it('can define posts relationship using belongsToArrayColumn', function () {
-    $tag = new class extends Tag
-    {
-        public function posts()
-        {
-            return $this->belongsToArrayColumn(
-                Post::class,
-                'id',
-                'post_ids'
-            );
-        }
-    };
-
-    $relation = $tag->posts();
-
-    expect($relation)->toBeInstanceOf(BelongsToArrayColumn::class);
+    expect($matchedEmployees[0]->employees)->toHaveCount(2); // Both users reference company 2
 });

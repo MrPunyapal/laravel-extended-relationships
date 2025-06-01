@@ -24,4 +24,9 @@ class Company extends Model
     ];
 
     public $timestamps = false;
+
+    public function employees()
+    {
+        return $this->belongsToArrayColumn(User::class, 'id', 'company_ids');
+    }
 }

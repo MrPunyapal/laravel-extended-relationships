@@ -17,6 +17,7 @@ class User extends Model
         'email',
         'companies',
         'user_ids',
+        'company_ids',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -25,6 +26,7 @@ class User extends Model
     protected $casts = [
         'companies' => 'array',
         'user_ids' => 'array',
+        'company_ids' => 'array',
     ];
 
     public $timestamps = false;

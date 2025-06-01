@@ -65,9 +65,17 @@ class HasManyKeys extends Relation
     public function addEagerConstraints(array $models): void
     {
         $foreignKeys = $this->foreignKeys;
-        $this->query->where(function ($query) use ($foreignKeys, $models): void {
+        $keys = $this->getKeys($models, $this->localKey);
+
+        $this->query->where(function ($query) use ($foreignKeys, $keys): void {
+            $first = true;
             foreach ($foreignKeys as $foreignKey) {
-                $query->orWhereIn($foreignKey, $this->getKeys($models, $this->localKey));
+                if ($first) {
+                    $query->whereIn($foreignKey, $keys);
+                    $first = false;
+                } else {
+                    $query->orWhereIn($foreignKey, $keys);
+                }
             }
         });
     }
@@ -102,6 +110,8 @@ class HasManyKeys extends Relation
             foreach ($this->foreignKeys as $foreignKey) {
                 if (isset($dictionary[$foreignKey][$key])) {
                     $desireRelations->{$this->relations[$foreignKey]} = $dictionary[$foreignKey][$key];
+                } else {
+                    $desireRelations->{$this->relations[$foreignKey]} = $this->related->newCollection();
                 }
             }
             $model->setRelation($relation, $desireRelations);
@@ -119,7 +129,10 @@ class HasManyKeys extends Relation
         $dictionary = [];
         foreach ($models as $model) {
             foreach ($this->foreignKeys as $foreignKey) {
-                $dictionary[$foreignKey][$model->{$foreignKey}] = $model;
+                if (! isset($dictionary[$foreignKey][$model->{$foreignKey}])) {
+                    $dictionary[$foreignKey][$model->{$foreignKey}] = $this->related->newCollection();
+                }
+                $dictionary[$foreignKey][$model->{$foreignKey}]->push($model);
             }
         }
 
