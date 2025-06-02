@@ -17,17 +17,17 @@ jobs:
         laravel: [^10.38.0, 11.*, 12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 10.*
+          - laravel: ^10.38.0
             testbench: 8.*
             carbon: ^2.67
           - laravel: 11.*
             testbench: 9.*
             carbon: ^2.72.2
           - laravel: 12.*
-            testbench: 10.*
+            testbench: ^10.38.0
             carbon: ^3.8.4
         exclude:
-          - Laravel: 10.*
+          - Laravel: ^10.38.0
             php: 8.4
           - Laravel: 11.*
             php: 8.1
