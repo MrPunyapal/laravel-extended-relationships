@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Post;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Post;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
 it('works with database operations and multiple keys', function () {
     // Create users in database

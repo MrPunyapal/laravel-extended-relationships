@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Mrpunyapal\LaravelExtendedRelationships\Tests;
+namespace MrPunyapal\LaravelExtendedRelationships\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

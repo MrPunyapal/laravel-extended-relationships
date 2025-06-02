@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Mrpunyapal\LaravelExtendedRelationships;
+namespace MrPunyapal\LaravelExtendedRelationships;
 
 use Illuminate\Database\Eloquent\Builder;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
+use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 
 trait HasExtendedRelationships
 {

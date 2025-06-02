@@ -1,8 +1,8 @@
 {
-    "name": "mr-punyapal/laravel-extended-relationships",
+    "name": "mrpunyapal/laravel-extended-relationships",
     "description": "Package provides additional, more efficient relationship methods for Laravel Eloquent models.",
     "keywords": [
-        "mr-punyapal",
+        "mrpunyapal",
         "laravel",
         "laravel-extended-relationships",
         "relationship",
@@ -11,7 +11,7 @@
         "eloquent-relationships",
         "Json"
     ],
-    "homepage": "https://github.com/mr-punyapal/laravel-extended-relationships",
+    "homepage": "https://github.com/mrpunyapal/laravel-extended-relationships",
     "license": "MIT",
     "authors": [
         {
@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Mrpunyapal\\LaravelExtendedRelationships\\": "src/"
+            "MrPunyapal\\LaravelExtendedRelationships\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Mrpunyapal\\LaravelExtendedRelationships\\Tests\\": "tests/"
+            "MrPunyapal\\LaravelExtendedRelationships\\Tests\\": "tests/"
         }
     },
     "scripts": {

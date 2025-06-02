@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Eloquent\Collection;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
 it('gets results correctly with actual database data', function () {
     // Create a company first

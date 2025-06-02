@@ -23,7 +23,7 @@ First, include the `HasExtendedRelationships` trait in your model:
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class Post extends Model {
     use HasExtendedRelationships;
@@ -97,7 +97,7 @@ This allows you to define multiple relationships with just one method, and only 
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class User extends Model{
 
@@ -156,7 +156,7 @@ If you have a column companies in your users table which stores an array of loca
 
 ```php 
 
-use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class User extends Model
 {
@@ -200,7 +200,7 @@ Here's an example:
 
 ```php
 
-use Mrpunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
 class Company extends Model
 {

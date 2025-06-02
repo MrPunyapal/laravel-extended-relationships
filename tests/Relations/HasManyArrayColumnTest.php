@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
+use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
 it('works with actual database operations', function () {
     // Create companies

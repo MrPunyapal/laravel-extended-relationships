@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
-use Mrpunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Company;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\Post;
-use Mrpunyapal\LaravelExtendedRelationships\Tests\Models\User;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
+use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
+use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Post;
+use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
 it('can create all relationship types through trait methods', function () {
     $post = new Post;
