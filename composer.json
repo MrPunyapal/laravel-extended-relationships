@@ -7,14 +7,16 @@
         "laravel-extended-relationships",
         "relationship",
         "has-many",
-        "Eloquent"
+        "Eloquent",
+        "eloquent-relationships",
+        "Json"
     ],
     "homepage": "https://github.com/mr-punyapal/laravel-extended-relationships",
     "license": "MIT",
     "authors": [
         {
-            "name": "mr-punyapal",
-            "email": "mrpunyapal071@gmail.com",
+            "name": "Punyapal Shah",
+            "email": "mrpunyapal@gmail.com",
             "role": "Developer"
         }
     ],
@@ -54,6 +56,6 @@
             "phpstan/extension-installer": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
