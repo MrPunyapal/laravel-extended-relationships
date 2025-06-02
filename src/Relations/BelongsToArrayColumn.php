@@ -29,11 +29,11 @@ class BelongsToArrayColumn extends BelongsTo
         }
         $query = $this->getBaseQuery();
 
-        $parentKey = $this->getParentKey();
-        if ($parentKey !== null) {
-            $searchValue = $this->isString ? (string) $parentKey : $parentKey;
-            $this->addJsonContainsConstraint($query, $this->ownerKey, $searchValue);
-        }
+        $query->when($this->isString, function ($q) {
+            $q->whereJsonContains($this->ownerKey, (string) $this->getParentKey());
+        }, function ($q) {
+            $q->whereJsonContains($this->ownerKey, $this->getParentKey());
+        });
 
         $query->whereNotNull($this->ownerKey);
     }
@@ -44,37 +44,15 @@ class BelongsToArrayColumn extends BelongsTo
     public function addEagerConstraints(array $models): void
     {
         $ids = $this->getEagerModelKeys($models);
-
-        if ($this->isString) {
-            // For strings, simple OR with quoted values
-            $this->query->where(function ($q) use ($ids) {
-                foreach ($ids as $id) {
-                    $q->orWhere($this->ownerKey, 'LIKE', '%"' . $id . '"%');
-                }
-            });
-        } else {
-            // For integers, use pattern matching with OR logic
-            $this->query->where(function ($q) use ($ids) {
-                foreach ($ids as $id) {
-                    $q->orWhere(function ($subQuery) use ($id) {
-                        $patterns = [
-                            '%[' . $id . ',%',
-                            '%,' . $id . ',%',
-                            '%,' . $id . ']%',
-                            '%[' . $id . ']%'
-                        ];
-
-                        foreach ($patterns as $i => $pattern) {
-                            if ($i === 0) {
-                                $subQuery->where($this->ownerKey, 'LIKE', $pattern);
-                            } else {
-                                $subQuery->orWhere($this->ownerKey, 'LIKE', $pattern);
-                            }
-                        }
-                    });
-                }
-            });
-        }
+        $this->query->where(function ($q) use ($ids) {
+            foreach ($ids as $id) {
+                $q->when($this->isString, function ($q) use ($id) {
+                    $q->orWhereJsonContains($this->ownerKey, (string) $id);
+                }, function ($q) use ($id) {
+                    $q->orWhereJsonContains($this->ownerKey, $id);
+                });
+            }
+        });
     }
 
     /**
@@ -106,50 +84,5 @@ class BelongsToArrayColumn extends BelongsTo
     public function getResults(): mixed
     {
         return $this->query->get();
-    }
-
-    /**
-     * Add JSON contains constraint in a database-agnostic way.
-     * Uses pattern matching that works across all database engines and Laravel versions.
-     */
-    protected function addJsonContainsConstraint($query, string $column, $value, string $boolean = 'and'): void
-    {
-        // Use pattern matching for all databases to ensure compatibility
-        // with prefer-lowest dependency resolution in CI environments
-        if ($this->isString) {
-            // For strings, search for quoted value: "value"
-            $method = $boolean === 'or' ? 'orWhere' : 'where';
-            $query->$method($column, 'LIKE', '%"' . $value . '"%');
-        } else {
-            // For integers, use precise pattern matching for unquoted numbers
-            $patterns = [
-                '%[' . $value . ',%',  // [1,
-                '%,' . $value . ',%',  // ,1,
-                '%,' . $value . ']%',  // ,1]
-                '%[' . $value . ']%'   // [1]
-            ];
-
-            if ($boolean === 'or') {
-                $query->orWhere(function ($subQuery) use ($column, $patterns) {
-                    foreach ($patterns as $i => $pattern) {
-                        if ($i === 0) {
-                            $subQuery->where($column, 'LIKE', $pattern);
-                        } else {
-                            $subQuery->orWhere($column, 'LIKE', $pattern);
-                        }
-                    }
-                });
-            } else {
-                $query->where(function ($subQuery) use ($column, $patterns) {
-                    foreach ($patterns as $i => $pattern) {
-                        if ($i === 0) {
-                            $subQuery->where($column, 'LIKE', $pattern);
-                        } else {
-                            $subQuery->orWhere($column, 'LIKE', $pattern);
-                        }
-                    }
-                });
-            }
-        }
     }
 }
