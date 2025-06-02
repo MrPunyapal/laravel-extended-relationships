@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-extended-relationships` will be documented in this file.
 
-## [Unreleased]
+## [2.0.0]
 
 ### Breaking Changes
 - **BREAKING**: Dropped support for Laravel 10
