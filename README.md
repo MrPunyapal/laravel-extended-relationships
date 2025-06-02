@@ -14,7 +14,7 @@ I faced issue and made my own relationships then realize if I can use packages f
 You can install the package via composer:
 
 ```bash
-composer require mr-punyapal/laravel-extended-relationships
+composer require mrpunyapal/laravel-extended-relationships
 ```
 
 ## Usage
