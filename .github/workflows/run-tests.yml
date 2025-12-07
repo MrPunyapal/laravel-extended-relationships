@@ -13,18 +13,23 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [8.4, 8.3, 8.2]
+        php: [8.5, 8.4, 8.3, 8.2]
         laravel: [11.*, 12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 11.*
-            testbench: 9.*
-            carbon: ^2.72.2
+            testbench: ^9.10.0
+            carbon: ^2.72.6
           - laravel: 12.*
             testbench: ^10.3.0
             carbon: ^3.8.4
-        exclude: []
-
+          - laravel: 12.*
+            php: 8.5
+            testbench: ^10.8.0
+            carbon: ^3.8.4
+        exclude:
+          - laravel: 11.*
+            php: 8.5
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -37,7 +42,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: none
+          coverage: xdebug
 
       - name: Setup problem matchers
         run: |
