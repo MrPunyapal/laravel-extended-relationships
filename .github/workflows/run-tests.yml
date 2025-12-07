@@ -23,6 +23,10 @@ jobs:
           - laravel: 12.*
             testbench: ^10.3.0
             carbon: ^3.8.4
+          - laravel: ^12.40.*
+            testbench: ^10.8.1
+            carbon: ^3.8.4
+            php: 8.5
         exclude:
           - Laravel: 11.*
             php: 8.5
