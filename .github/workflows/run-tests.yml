@@ -27,7 +27,7 @@ jobs:
             testbench: ^10.8.1
             carbon: ^3.8.4
         exclude: [
-          { php: 8.5, laravel: 11.* }
+          { os: *, php: 8.5, laravel: 11.* }
         ]
 
 
