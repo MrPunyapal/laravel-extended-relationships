@@ -89,9 +89,11 @@ it('works with eager loading in database', function (): void {
     }])->get();
 
     expect($companies)->toHaveCount(2);
-    expect($companies[0]->employees)->toHaveCount(2) // Company 1 has Alice and Bob
+    // Company 1 has Alice and Bob
+    expect($companies[0]->employees)->toHaveCount(2)
         ->and($companies[0]->employees->pluck('name')->toArray())->toBe(['Alice', 'Bob']);
-    expect($companies[1]->employees)->toHaveCount(2) // Company 2 has Bob and Charlie
+    // Company 2 has Bob and Charlie
+    expect($companies[1]->employees)->toHaveCount(2)
         ->and($companies[1]->employees->pluck('name')->toArray())->toBe(['Bob', 'Charlie']);
 });
 
