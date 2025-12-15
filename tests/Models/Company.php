@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MrPunyapal\LaravelExtendedRelationships\Tests\Models;
 
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Illuminate\Database\Eloquent\Model;
 use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
 
@@ -25,7 +26,7 @@ class Company extends Model
 
     public $timestamps = false;
 
-    public function employees(): \MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn
+    public function employees(): BelongsToArrayColumn
     {
         return $this->belongsToArrayColumn(User::class, 'id', 'company_ids');
     }
