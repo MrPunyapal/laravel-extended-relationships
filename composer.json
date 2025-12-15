@@ -47,12 +47,12 @@
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "lint": [
-            "pint --parallel",
-            "rector"
+            "rector",
+            "pint --parallel"
         ],
         "test:lint": [
-            "pint --test --parallel",
-            "rector --dry-run"
+            "rector --dry-run",
+            "pint --test --parallel"
         ],
         "test:types": "phpstan analyse",
         "test:type-coverage": "pest --type-coverage --min=100",
