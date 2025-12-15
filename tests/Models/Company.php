@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MrPunyapal\LaravelExtendedRelationships\Tests\Models;
 
-use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use Illuminate\Database\Eloquent\Model;
 use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 
 class Company extends Model
 {
