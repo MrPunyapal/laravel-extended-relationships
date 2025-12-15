@@ -25,7 +25,7 @@ class Company extends Model
 
     public $timestamps = false;
 
-    public function employees()
+    public function employees(): \MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn
     {
         return $this->belongsToArrayColumn(User::class, 'id', 'company_ids');
     }

@@ -44,9 +44,9 @@ class BelongsToManyKeys extends Relation
         if (! static::$constraints) {
             return;
         }
-        $this->query->where(function ($query) {
+        $this->query->where(function ($query): void {
             foreach ($this->localKeys as $localKey) {
-                $query->orWhere(function ($query) use ($localKey) {
+                $query->orWhere(function ($query) use ($localKey): void {
                     $query->where($this->foreignKey, '=', $this->getParentKey($localKey))
                         ->whereNotNull($this->foreignKey);
                 });

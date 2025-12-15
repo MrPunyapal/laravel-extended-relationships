@@ -29,7 +29,7 @@ class TestCase extends Orchestra
 
     protected function setUpDatabase(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
@@ -42,7 +42,7 @@ class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('companies', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->nullable();
             $table->json('user_ids')->nullable();
@@ -50,7 +50,7 @@ class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table): void {
             $table->id();
             $table->string('title')->nullable();
             $table->text('content')->nullable();
@@ -60,7 +60,7 @@ class TestCase extends Orchestra
             $table->timestamps();
         });
 
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table): void {
             $table->id();
             $table->string('name')->nullable();
             $table->timestamps();

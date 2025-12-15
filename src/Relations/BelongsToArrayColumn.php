@@ -29,9 +29,9 @@ class BelongsToArrayColumn extends BelongsTo
         }
         $query = $this->getBaseQuery();
 
-        $query->when($this->isString, function ($q) {
+        $query->when($this->isString, function ($q): void {
             $q->whereJsonContains($this->ownerKey, (string) $this->getParentKey());
-        }, function ($q) {
+        }, function ($q): void {
             $q->whereJsonContains($this->ownerKey, $this->getParentKey());
         });
 
@@ -44,11 +44,11 @@ class BelongsToArrayColumn extends BelongsTo
     public function addEagerConstraints(array $models): void
     {
         $ids = $this->getEagerModelKeys($models);
-        $this->query->where(function ($q) use ($ids) {
+        $this->query->where(function ($q) use ($ids): void {
             foreach ($ids as $id) {
-                $q->when($this->isString, function ($q) use ($id) {
+                $q->when($this->isString, function ($q) use ($id): void {
                     $q->orWhereJsonContains($this->ownerKey, (string) $id);
-                }, function ($q) use ($id) {
+                }, function ($q) use ($id): void {
                     $q->orWhereJsonContains($this->ownerKey, $id);
                 });
             }

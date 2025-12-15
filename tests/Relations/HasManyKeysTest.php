@@ -6,7 +6,7 @@ use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyKeys;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Post;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('works with database operations and multiple foreign keys', function () {
+it('works with database operations and multiple foreign keys', function (): void {
     // Create users
     $alice = User::create(['id' => 100, 'name' => 'Alice Author', 'email' => 'alice@example.com']);
     $bob = User::create(['id' => 200, 'name' => 'Bob Editor', 'email' => 'bob@example.com']);
@@ -49,7 +49,7 @@ it('works with database operations and multiple foreign keys', function () {
         ->and($models[2]->audited->updated->first()->title)->toBe('Post Delta');
 });
 
-it('handles eager loading with database models', function () {
+it('handles eager loading with database models', function (): void {
     // Create users
     User::create(['id' => 400, 'name' => 'Diana Admin', 'email' => 'diana@example.com']);
     User::create(['id' => 500, 'name' => 'Eve Manager', 'email' => 'eve@example.com']);
@@ -63,7 +63,7 @@ it('handles eager loading with database models', function () {
 
     // For now, we'll use a direct query instead of the relationship query
     // which has a different implementation for eager loading constraints
-    $directQuery = Post::where(function ($query) use ($userIds) {
+    $directQuery = Post::where(function ($query) use ($userIds): void {
         $query->whereIn('created_by', $userIds)
             ->orWhereIn('updated_by', $userIds);
     })->get();
@@ -72,7 +72,7 @@ it('handles eager loading with database models', function () {
         ->and($directQuery->pluck('title')->sort()->values()->toArray())->toBe(['Echo Post', 'Foxtrot Post']);
 });
 
-it('handles null foreign keys gracefully', function () {
+it('handles null foreign keys gracefully', function (): void {
     User::create(['id' => 600, 'name' => 'Frank Solo', 'email' => 'frank@example.com']);
 
     // Create posts with some null foreign keys
@@ -97,7 +97,7 @@ it('handles null foreign keys gracefully', function () {
         ->and($models[0]->audited->updated->first()->title)->toBe('Hotel Post');
 });
 
-it('builds dictionary correctly with database models', function () {
+it('builds dictionary correctly with database models', function (): void {
     Post::create(['id' => 10000, 'title' => 'Juliet Post', 'content' => 'Juliet content', 'created_by' => 700, 'updated_by' => 800]);
     Post::create(['id' => 11000, 'title' => 'Kilo Post', 'content' => 'Kilo content', 'created_by' => 800, 'updated_by' => 700]);
 

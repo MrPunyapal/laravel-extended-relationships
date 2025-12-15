@@ -6,7 +6,7 @@ use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Post;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('works with database operations and multiple keys', function () {
+it('works with database operations and multiple keys', function (): void {
     // Create users in database
     $creator = User::create(['id' => 10, 'name' => 'John Creator', 'email' => 'john@example.com']);
     $updater = User::create(['id' => 20, 'name' => 'Jane Updater', 'email' => 'jane@example.com']);
@@ -42,7 +42,7 @@ it('works with database operations and multiple keys', function () {
         ->and($models[2]->auditors->updater->name)->toBe('Bob Viewer');
 });
 
-it('handles eager loading with multiple models', function () {
+it('handles eager loading with multiple models', function (): void {
     // Create users
     User::create(['id' => 40, 'name' => 'Alice Admin', 'email' => 'alice@example.com']);
     User::create(['id' => 50, 'name' => 'Charlie Editor', 'email' => 'charlie@example.com']);
@@ -70,7 +70,7 @@ it('handles eager loading with multiple models', function () {
         ->and($directQuery->pluck('name')->sort()->values()->toArray())->toBe(['Alice Admin', 'Charlie Editor', 'Diana Reviewer']);
 });
 
-it('handles null and missing keys gracefully', function () {
+it('handles null and missing keys gracefully', function (): void {
     User::create(['id' => 70, 'name' => 'Eve Author', 'email' => 'eve@example.com']);
 
     $post1 = Post::create(['id' => 600, 'title' => 'Gamma Post', 'content' => 'Gamma content', 'created_by' => 70, 'updated_by' => null]);
@@ -94,7 +94,7 @@ it('handles null and missing keys gracefully', function () {
         ->and($models[1]->auditors->updater->name)->toBe('Eve Author');
 });
 
-it('builds dictionary correctly for database models', function () {
+it('builds dictionary correctly for database models', function (): void {
     User::create(['id' => 80, 'name' => 'Frank Builder', 'email' => 'frank@example.com']);
     User::create(['id' => 90, 'name' => 'Grace Tester', 'email' => 'grace@example.com']);
 
