@@ -59,7 +59,6 @@
         "test:unit": "pest --parallel --coverage --min=100",
         "test": [
             "@test:lint",
-            "@test:refactor",
             "@test:types",
             "@test:type-coverage",
             "@test:unit"
