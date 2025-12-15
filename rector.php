@@ -13,4 +13,12 @@ return RectorConfig::configure()
     ])
     ->withSets([
          PestSetList::PEST_CODE_QUALITY,
-    ]);
+    ])
+    ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
+        typeDeclarations: true,
+        privatization: true,
+        earlyReturn: true,
+    )
+    ->withPhpSets();
