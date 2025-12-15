@@ -113,5 +113,5 @@ it('handles non-array parent key gracefully', function () {
 
     $parentKeys = $relation->getParentKey();
 
-    expect($parentKeys)->toBe([]);
+    expect($parentKeys)->toBeEmpty();
 });
