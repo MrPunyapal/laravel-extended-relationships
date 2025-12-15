@@ -21,7 +21,7 @@ class HasManyArrayColumn extends HasMany
         $query = $this->getRelationQuery();
 
         $parentKeys = $this->getParentKey();
-        if (! empty($parentKeys)) {
+        if ($parentKeys !== []) {
             $query->whereIn($this->foreignKey, $parentKeys);
         }
 
@@ -55,7 +55,7 @@ class HasManyArrayColumn extends HasMany
     {
         $keys = [];
 
-        collect($models)->each(function ($value) use ($key, &$keys) {
+        collect($models)->each(function ($value) use ($key, &$keys): void {
             $attribute = $value->getAttribute($key);
             if (is_array($attribute)) {
                 $keys = array_merge($keys, $attribute);
@@ -74,7 +74,7 @@ class HasManyArrayColumn extends HasMany
     {
         $foreign = $this->getForeignKeyName();
 
-        $dictionary = $results->mapToDictionary(fn ($result) => [$result->{$foreign} => $result])->all();
+        $dictionary = $results->mapToDictionary(fn ($result): array => [$result->{$foreign} => $result])->all();
 
         foreach ($models as $model) {
             $ids = $model->getAttribute($this->localKey);

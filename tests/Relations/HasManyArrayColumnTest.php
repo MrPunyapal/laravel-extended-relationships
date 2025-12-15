@@ -6,7 +6,7 @@ use MrPunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('works with actual database operations', function () {
+it('works with actual database operations', function (): void {
     // Create companies
     Company::create(['id' => 1, 'name' => 'Tech Corp']);
     Company::create(['id' => 2, 'name' => 'Design Studio']);
@@ -36,7 +36,7 @@ it('works with actual database operations', function () {
         ->and($models[2]->workplaces)->toHaveCount(0); // No matching companies for ID 999
 });
 
-it('handles eager loading with database data', function () {
+it('handles eager loading with database data', function (): void {
     // Create companies
     Company::create(['id' => 10, 'name' => 'Alpha Inc']);
     Company::create(['id' => 20, 'name' => 'Beta Corp']);
@@ -65,7 +65,7 @@ it('handles eager loading with database data', function () {
         ->and($companies->pluck('name')->sort()->values()->toArray())->toBe(['Alpha Inc', 'Beta Corp', 'Gamma LLC']);
 });
 
-it('handles empty and null arrays correctly', function () {
+it('handles empty and null arrays correctly', function (): void {
     Company::create(['id' => 100, 'name' => 'Solo Corp']);
 
     // Create users with empty/null company arrays
@@ -86,7 +86,7 @@ it('handles empty and null arrays correctly', function () {
         ->and($models[1]->workplaces)->toHaveCount(0);
 });
 
-it('handles parent key extraction correctly', function () {
+it('handles parent key extraction correctly', function (): void {
     $user = new User(['companies' => [5, 10, 15]]);
 
     $relation = new HasManyArrayColumn(
@@ -101,7 +101,7 @@ it('handles parent key extraction correctly', function () {
     expect($parentKeys)->toBe([5, 10, 15]);
 });
 
-it('handles non-array parent key gracefully', function () {
+it('handles non-array parent key gracefully', function (): void {
     $user = new User(['companies' => 'not-an-array']);
 
     $relation = new HasManyArrayColumn(

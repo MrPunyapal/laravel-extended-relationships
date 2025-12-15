@@ -7,7 +7,7 @@ use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('gets results correctly with actual database data', function () {
+it('gets results correctly with actual database data', function (): void {
     // Create a company first
     $company = Company::create(['id' => 1, 'name' => 'Test Company']);
 
@@ -25,7 +25,7 @@ it('gets results correctly with actual database data', function () {
         ->and($results->pluck('name')->sort()->values()->toArray())->toBe(['Jane Smith', 'John Doe']);
 });
 
-it('works with string flag for mixed data types', function () {
+it('works with string flag for mixed data types', function (): void {
     $company = Company::create(['id' => 1, 'name' => 'String Company']);
 
     // Create users with string IDs in their company_ids arrays
@@ -39,7 +39,7 @@ it('works with string flag for mixed data types', function () {
         ->and($results->first()->name)->toBe('Alice');
 });
 
-it('matches models with actual database data', function () {
+it('matches models with actual database data', function (): void {
     // Create companies first
     $company1 = Company::create(['id' => 1, 'name' => 'Company A']);
     $company2 = Company::create(['id' => 2, 'name' => 'Company B']);
@@ -72,7 +72,7 @@ it('matches models with actual database data', function () {
         ->and($models[2]->employees->pluck('name')->toArray())->toBe(['Charlie Brown']);
 });
 
-it('works with eager loading in database', function () {
+it('works with eager loading in database', function (): void {
     // Create companies
     $company1 = Company::create(['id' => 1, 'name' => 'Tech Corp']);
     $company2 = Company::create(['id' => 2, 'name' => 'Design Studio']);
@@ -84,7 +84,7 @@ it('works with eager loading in database', function () {
     User::create(['id' => 4, 'name' => 'David', 'email' => 'david@example.com', 'company_ids' => [3]]); // Won't match
 
     // Use the proper way to test eager loading - through the actual relationship
-    $companies = Company::with(['employees' => function ($query) {
+    $companies = Company::with(['employees' => function ($query): void {
         $query->orderBy('name');
     }])->get();
 
@@ -95,7 +95,7 @@ it('works with eager loading in database', function () {
         ->and($companies[1]->employees->pluck('name')->toArray())->toBe(['Bob', 'Charlie']);
 });
 
-it('handles empty arrays gracefully', function () {
+it('handles empty arrays gracefully', function (): void {
     $company = Company::create(['id' => 1, 'name' => 'Empty Company']);
 
     // Create users with empty or null company_ids
@@ -108,7 +108,7 @@ it('handles empty arrays gracefully', function () {
     expect($results)->toHaveCount(0);
 });
 
-it('handles null json values gracefully', function () {
+it('handles null json values gracefully', function (): void {
     $company = Company::create(['id' => 1, 'name' => 'Test Company']);
 
     // Create user with null company_ids (this should be excluded by whereNotNull constraint)

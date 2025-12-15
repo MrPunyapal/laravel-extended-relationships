@@ -6,6 +6,7 @@ namespace MrPunyapal\LaravelExtendedRelationships\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use MrPunyapal\LaravelExtendedRelationships\HasExtendedRelationships;
+use MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn;
 
 class Company extends Model
 {
@@ -25,7 +26,7 @@ class Company extends Model
 
     public $timestamps = false;
 
-    public function employees()
+    public function employees(): BelongsToArrayColumn
     {
         return $this->belongsToArrayColumn(User::class, 'id', 'company_ids');
     }

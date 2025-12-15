@@ -10,7 +10,7 @@ use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Company;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\Post;
 use MrPunyapal\LaravelExtendedRelationships\Tests\Models\User;
 
-it('can create all relationship types through trait methods', function () {
+it('can create all relationship types through trait methods', function (): void {
     $post = new Post;
     $user = new User;
     $company = new Company;
@@ -23,7 +23,7 @@ it('can create all relationship types through trait methods', function () {
         ->and($company->belongsToArrayColumn(User::class, 'id', 'user_ids', true))->toBeInstanceOf(BelongsToArrayColumn::class);
 });
 
-it('integrates all relationship types with database operations', function () {
+it('integrates all relationship types with database operations', function (): void {
     // Create base entities
     $author = User::create(['id' => 1000, 'name' => 'Jane Author', 'email' => 'jane@example.com', 'companies' => [1, 2], 'company_ids' => [1, 2]]);
     $editor = User::create(['id' => 2000, 'name' => 'John Editor', 'email' => 'john@example.com', 'companies' => [2, 3], 'company_ids' => [2, 3]]);
