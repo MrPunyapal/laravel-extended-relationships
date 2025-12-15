@@ -31,7 +31,8 @@
         "orchestra/testbench": "^9.10|^10.3",
         "pestphp/pest": "^2.0|^3.0|^4.0",
         "pestphp/pest-plugin-arch": "^2.0|^3.0|^4.0",
-        "pestphp/pest-plugin-laravel": "^2.2|^3.0|^4.0"
+        "pestphp/pest-plugin-laravel": "^2.2|^3.0|^4.0",
+        "rector/rector": "^2.2"
     },
     "autoload": {
         "psr-4": {
