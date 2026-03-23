@@ -7,7 +7,7 @@
 ## Requirements
 
 - PHP: ^8.2|^8.3|^8.4|^8.5
-- Laravel: ^11.0|^12.0
+- Laravel: ^11.0|^12.0|^13.0
 
 ### What is a need of extended relationships?
 The laravel-extended-relationships package provides additional, more efficient relationship methods for Laravel Eloquent models. The package offers several useful features such as reducing the number of database queries, improving performance, and minimizing duplicate code.
