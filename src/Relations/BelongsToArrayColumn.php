@@ -13,19 +13,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
  * @template TDeclaringModel of \Illuminate\Database\Eloquent\Model
  *
- * @extends \Illuminate\Database\Eloquent\Relations\BelongsTo<TRelatedModel, TDeclaringModel, \Illuminate\Database\Eloquent\Collection<int, TRelatedModel>>
+ * @extends BelongsTo<TRelatedModel, TDeclaringModel, Collection<int, TRelatedModel>>
  */
 class BelongsToArrayColumn extends BelongsTo
 {
     /**
      * Create a new belongs to array Column relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<TRelatedModel>  $query
+     * @param  Builder<TRelatedModel>  $query
      * @param  TDeclaringModel  $child
-     * @param  string  $foreignKey
-     * @param  string  $ownerKey
-     * @param  string|null  $relationName
-     * @param  bool  $isString
      */
     public function __construct(Builder $query, Model $child, string $foreignKey, string $ownerKey, ?string $relationName, protected bool $isString = false)
     {

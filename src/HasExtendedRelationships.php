@@ -18,9 +18,8 @@ trait HasExtendedRelationships
      * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TRelatedModel>  $related
-     * @param  string|null  $foreignKey
      * @param  array<string, string>|null  $relations
-     * @return \MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToManyKeys<TRelatedModel, $this>
+     * @return BelongsToManyKeys<TRelatedModel, $this>
      */
     public function belongsToManyKeys(string $related, ?string $foreignKey, ?array $relations): BelongsToManyKeys
     {
@@ -34,8 +33,7 @@ trait HasExtendedRelationships
      *
      * @param  class-string<TRelatedModel>  $related
      * @param  array<string, string>|null  $relations
-     * @param  string|null  $localKey
-     * @return \MrPunyapal\LaravelExtendedRelationships\Relations\HasManyKeys<TRelatedModel, $this>
+     * @return HasManyKeys<TRelatedModel, $this>
      */
     public function hasManyKeys(string $related, ?array $relations, ?string $localKey): HasManyKeys
     {
@@ -48,9 +46,7 @@ trait HasExtendedRelationships
      * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TRelatedModel>  $related
-     * @param  string|null  $foreignKey
-     * @param  string|null  $localKey
-     * @return \MrPunyapal\LaravelExtendedRelationships\Relations\HasManyArrayColumn<TRelatedModel, $this>
+     * @return HasManyArrayColumn<TRelatedModel, $this>
      */
     public function hasManyArrayColumn(string $related, ?string $foreignKey, ?string $localKey): HasManyArrayColumn
     {
@@ -63,10 +59,7 @@ trait HasExtendedRelationships
      * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TRelatedModel>  $related
-     * @param  string|null  $foreignKey
-     * @param  string|null  $localKey
-     * @param  bool  $isString
-     * @return \MrPunyapal\LaravelExtendedRelationships\Relations\BelongsToArrayColumn<TRelatedModel, $this>
+     * @return BelongsToArrayColumn<TRelatedModel, $this>
      */
     public function belongsToArrayColumn(string $related, ?string $foreignKey, ?string $localKey, bool $isString = false): BelongsToArrayColumn
     {
@@ -79,7 +72,7 @@ trait HasExtendedRelationships
      * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
      *
      * @param  class-string<TRelatedModel>  $related
-     * @return \Illuminate\Database\Eloquent\Builder<TRelatedModel>
+     * @return Builder<TRelatedModel>
      */
     protected function relatedNewQuery(string $related): Builder
     {
