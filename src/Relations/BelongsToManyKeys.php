@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @template TRelatedModel of \Illuminate\Database\Eloquent\Model
  * @template TDeclaringModel of \Illuminate\Database\Eloquent\Model
  *
- * @extends \Illuminate\Database\Eloquent\Relations\Relation<TRelatedModel, TDeclaringModel, object>
+ * @extends Relation<TRelatedModel, TDeclaringModel, object>
  */
 class BelongsToManyKeys extends Relation
 {
@@ -34,9 +34,8 @@ class BelongsToManyKeys extends Relation
     /**
      * Create a new has one or many relationship instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder<TRelatedModel>  $query
+     * @param  Builder<TRelatedModel>  $query
      * @param  TDeclaringModel  $parent
-     * @param  string  $foreignKey
      * @param  array<string, string>  $relations
      */
     public function __construct(Builder $query, Model $parent, protected string $foreignKey, array $relations)
