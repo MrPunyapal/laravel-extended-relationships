@@ -32,6 +32,7 @@ jobs:
             carbon: ^3.8.4
           - laravel: 13.*
             testbench: ^11.0.0
+            carbon: ^3.8.4
         exclude:
           - laravel: 11.*
             php: 8.5
