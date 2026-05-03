@@ -22,6 +22,23 @@ You can install the package via composer:
 composer require mrpunyapal/laravel-extended-relationships
 ```
 
+## Laravel Boost
+
+This package ships a Laravel Boost skill named `laravel-extended-relationships-development` for on-demand guidance when working with these custom relationship helpers.
+
+If your Laravel application uses Boost, install Boost and publish its resources:
+
+```bash
+composer require laravel/boost --dev
+php artisan boost:install
+```
+
+If Boost is already installed and you add this package later, ask Boost to discover new package skills:
+
+```bash
+php artisan boost:update --discover
+```
+
 ## Usage
 
 First, include the `HasExtendedRelationships` trait in your model:
