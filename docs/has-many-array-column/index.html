@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HasManyArrayColumn | Laravel Extended Relationships</title>
+    <meta name="description" content="Additional, more efficient relationship methods for Laravel Eloquent models.">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HasManyArrayColumn | Laravel Extended Relationships">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="https://mrpunyapal.github.io/laravel-extended-relationships/has-many-array-column">
+    <meta property="og:image" content="https://mrpunyapal.github.io/laravel-extended-relationships/og/has-many-array-column.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HasManyArrayColumn | Laravel Extended Relationships">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="https://mrpunyapal.github.io/laravel-extended-relationships/og/has-many-array-column.png">
+    <link rel="stylesheet" href="../assets/app.css">
+    <script src="../assets/app.js" defer></script>
+</head>
+<body data-docsmith-root="../">
+    <div class="shell">
+        <aside class="sidebar" data-docsmith-sidebar>
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <h1 class="brand">Laravel Extended Relationships</h1>
+                    <p class="tagline">Additional, more efficient relationship methods for Laravel Eloquent models.</p>
+                </div>
+                <button type="button" class="mobile-menu-toggle" data-docsmith-menu-toggle aria-expanded="false" aria-controls="docsmith-sidebar-panel" aria-label="Open menu"><svg class="mobile-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="mobile-menu-bars" d="M3.75 8.25h16.5M3.75 15.75h11"></path><path class="mobile-menu-close" d="M6 6l12 12M18 6L6 18"></path></svg><span class="sr-only">Toggle menu</span></button>
+            </div>
+            <div class="sidebar-panel" id="docsmith-sidebar-panel" data-docsmith-sidebar-panel>
+                
+                <div class="sidebar-actions"><a class="sidebar-action-link" href="https://github.com/mrpunyapal/laravel-extended-relationships">Repository</a><button type="button" class="theme-toggle" data-docsmith-theme-toggle>Theme</button></div>
+                <div class="search">
+                    <input type="search" placeholder="Search pages  (⌘K)" aria-label="Search pages" data-docsmith-search>
+                    <div class="search-results" data-docsmith-search-results hidden></div>
+                    <div class="search-empty" data-docsmith-empty>No pages match your search.</div>
+                </div>
+                <nav class="nav" data-docsmith-nav><a class="" href="../" data-nav-item data-title="Laravel Extended Relationships" data-search="Laravel Extended Relationships Laravel Extended Relationships">Laravel Extended Relationships</a><a class="" href="../installation/" data-nav-item data-title="Installation" data-search="Installation Installation">Installation</a><a class="" href="../usage/" data-nav-item data-title="Usage" data-search="Usage Usage">Usage</a><a class="" href="../belongs-to-many-keys/" data-nav-item data-title="BelongsToManyKeys" data-search="BelongsToManyKeys BelongsToManyKeys">BelongsToManyKeys</a><a class="" href="../has-many-keys/" data-nav-item data-title="HasManyKeys" data-search="HasManyKeys HasManyKeys">HasManyKeys</a><a class="active" href="./" data-nav-item data-title="HasManyArrayColumn" data-search="HasManyArrayColumn HasManyArrayColumn">HasManyArrayColumn</a><a class="" href="../belongs-to-array-column/" data-nav-item data-title="BelongsToArrayColumn" data-search="BelongsToArrayColumn BelongsToArrayColumn">BelongsToArrayColumn</a></nav>
+                <a class="docsmith-badge" href="https://github.com/MrPunyapal/docsmith" target="_blank" rel="noopener noreferrer" data-docsmith-badge aria-label="Built with DocSmith"><svg class="docsmith-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-6.716-4.35-9.428-7.052C.4 11.692-.21 8.9 1.38 6.87 2.736 5.14 5.09 4.583 6.86 5.686 8 6.41 8.86 7.55 9.6 8.7c.74-1.15 1.6-2.29 2.74-3.014 1.77-1.103 4.124-.546 5.48 1.184 1.59 2.03.98 4.822-1.192 7.078C18.716 16.65 12 21 12 21z"/></svg><span class="docsmith-badge-text">Built with</span><span class="docsmith-badge-brand">DocSmith</span></a>
+            </div>
+        </aside>
+        <button type="button" class="sidebar-backdrop" data-docsmith-sidebar-backdrop aria-label="Close menu"></button>
+        <main class="content">
+            <article>
+                <header class="doc-head">
+                    
+                    <h1>HasManyArrayColumn</h1>
+                    
+                </header>
+                <div class="doc-body">
+                    <p><code>hasManyArrayColumn()</code> defines a <code>hasMany</code> relationship where a <strong>local column stores an array of foreign keys</strong>, rather than a single value.</p>
+<h2 id="signature">Signature</h2>
+<pre class="phiki language-php github-light phiki-themes github-dark" data-language="php" style="background-color: #fff;color: #24292e;--phiki-dark-background-color: #24292e;--phiki-dark-color: #e1e4e8;"><code><span class="line"><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">public</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">function</span><span class="token"> </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">hasManyArrayColumn</span><span class="token">(</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">string</span><span class="token"> </span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">related</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">?</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">string</span><span class="token"> </span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">foreignKey</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">?</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">string</span><span class="token"> </span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">localKey</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">)</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">:</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">HasManyArrayColumn</span><span class="token">
+</span></span></code></pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$related</code></td>
+<td>The related model class (e.g. <code>Company::class</code>)</td>
+</tr>
+<tr>
+<td><code>$foreignKey</code></td>
+<td>The primary key of the related table (<code>id</code>)</td>
+</tr>
+<tr>
+<td><code>$localKey</code></td>
+<td>The local array column containing related keys (<code>companies</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="example">Example</h2>
+<p>A <code>User</code> whose <code>companies</code> column stores an array of company IDs like <code>[7, 71]</code>:</p>
+<pre class="phiki language-php github-light phiki-themes github-dark" data-language="php" style="background-color: #fff;color: #24292e;--phiki-dark-background-color: #24292e;--phiki-dark-color: #e1e4e8;"><code><span class="line"><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">&lt;</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">?</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">php</span><span class="token">
+</span></span><span class="line"><span class="token">
+</span></span><span class="line"><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">use</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">Illuminate</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">\</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">Database</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">\</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">Eloquent</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">\</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">Model</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">use</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">MrPunyapal</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">\</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">LaravelExtendedRelationships</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">\</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">HasExtendedRelationships</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token">
+</span></span><span class="line"><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">class</span><span class="token"> </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">User</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">extends</span><span class="token"> </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">Model</span><span class="token">
+</span></span><span class="line"><span class="token">{</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">use</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">HasExtendedRelationships</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">protected</span><span class="token"> </span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">casts</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">=</span><span class="token"> </span><span class="token">[</span><span class="token">
+</span></span><span class="line"><span class="token">        </span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">companies</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">=&gt;</span><span class="token"> </span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">array</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token">]</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">public</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">function</span><span class="token"> </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">myCompanies</span><span class="token">(</span><span class="token">)</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token">{</span><span class="token">
+</span></span><span class="line"><span class="token">        </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">return</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">$</span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">this</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">-&gt;</span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">hasManyArrayColumn</span><span class="token">(</span><span class="token">
+</span></span><span class="line"><span class="token">            </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">related</span><span class="token">:</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">Company</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">::</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">class</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">            </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">foreignKey</span><span class="token">:</span><span class="token"> </span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">id</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">            </span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">localKey</span><span class="token">:</span><span class="token"> </span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">companies</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token">,</span><span class="token">
+</span></span><span class="line"><span class="token">        </span><span class="token">)</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token">    </span><span class="token">}</span><span class="token">
+</span></span><span class="line"><span class="token">}</span><span class="token">
+</span></span></code></pre>
+<h2 id="fetching-related-data">Fetching related data</h2>
+<pre class="phiki language-php github-light phiki-themes github-dark" data-language="php" style="background-color: #fff;color: #24292e;--phiki-dark-background-color: #24292e;--phiki-dark-color: #e1e4e8;"><code><span class="line"><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">user</span><span class="token"> </span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">=</span><span class="token"> </span><span class="token" style="color: #005cc5;--phiki-dark-color: #79b8ff;">User</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">::</span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">with</span><span class="token">(</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">myCompanies</span><span class="token" style="color: #032f62;--phiki-dark-color: #9ecbff;">'</span><span class="token">)</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">-&gt;</span><span class="token" style="color: #6f42c1;--phiki-dark-color: #b392f0;">first</span><span class="token">(</span><span class="token">)</span><span class="token">;</span><span class="token">
+</span></span><span class="line"><span class="token">
+</span></span><span class="line"><span class="token" style="color: #6a737d;--phiki-dark-color: #6a737d;">//</span><span class="token" style="color: #6a737d;--phiki-dark-color: #6a737d;"> companies with ids 7 and 71</span><span class="token" style="color: #6a737d;--phiki-dark-color: #6a737d;">
+</span></span><span class="line"><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">$</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">user</span><span class="token" style="color: #d73a49;--phiki-dark-color: #f97583;">-&gt;</span><span class="token" style="color: #24292e;--phiki-dark-color: #e1e4e8;">myCompanies</span><span class="token">;</span><span class="token">
+</span></span></code></pre>
+<p>No pivot table and no extra query per company — the relation resolves all stored IDs with a single query.</p>
+
+                </div>
+                <footer class="doc-meta">
+                    <a class="edit-link" href="https://github.com/mrpunyapal/laravel-extended-relationships/edit/main/md/has-many-array-column.md">Edit this page</a>
+                </footer>
+            </article>
+            <nav class="pager" aria-label="Page navigation"><a class="pager-link" href="../has-many-keys/"><span>Previous</span><strong>HasManyKeys</strong></a><a class="pager-link pager-link-next" href="../belongs-to-array-column/"><span>Next</span><strong>BelongsToArrayColumn</strong></a></nav>
+        </main>
+        
+    </div>
+    <div class="search-overlay" data-docsmith-search-overlay hidden role="dialog" aria-label="Search documentation">
+    <div class="search-overlay-backdrop" data-docsmith-search-overlay-close></div>
+    <div class="search-overlay-panel">
+        <div class="search-overlay-input-wrap">
+            <svg class="search-overlay-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" class="search-overlay-input" placeholder="Search documentation..." aria-label="Search documentation" data-docsmith-search-overlay-input autocomplete="off">
+            <kbd class="search-overlay-hint">ESC</kbd>
+        </div>
+        <div class="search-overlay-results" data-docsmith-search-overlay-results></div>
+        <div class="search-overlay-empty" data-docsmith-search-overlay-empty hidden>No results found.</div>
+    </div>
+</div>
+</body>
+</html>
