@@ -1,0 +1,12 @@
+# Laravel Extended Relationships
+> Additional, more efficient relationship methods for Laravel Eloquent models.
+
+## Docs
+
+- https://mrpunyapal.github.io/laravel-extended-relationships/belongs-to-array-column: BelongsToArrayColumn
+- https://mrpunyapal.github.io/laravel-extended-relationships/belongs-to-many-keys: BelongsToManyKeys
+- https://mrpunyapal.github.io/laravel-extended-relationships/has-many-array-column: HasManyArrayColumn
+- https://mrpunyapal.github.io/laravel-extended-relationships/has-many-keys: HasManyKeys
+- https://mrpunyapal.github.io/laravel-extended-relationships/installation: Installation
+- https://mrpunyapal.github.io/laravel-extended-relationships/: Laravel Extended Relationships
+- https://mrpunyapal.github.io/laravel-extended-relationships/usage: Usage

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/belongs-to-array-column</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/belongs-to-many-keys</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/has-many-array-column</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/has-many-keys</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/installation</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/</loc>
+  </url>
+  <url>
+    <loc>https://mrpunyapal.github.io/laravel-extended-relationships/usage</loc>
+  </url>
+</urlset>
