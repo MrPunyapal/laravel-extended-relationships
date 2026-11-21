@@ -9,7 +9,7 @@
 
 ## Requirements
 
-- PHP: ^8.3|^8.4|^8.5
+- PHP: ^8.3|^8.4|^8.5|^8.6
 - Laravel: ^12.0|^13.0
 
 ### What is a need of extended relationships?

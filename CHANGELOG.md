@@ -4,6 +4,9 @@ All notable changes to `laravel-extended-relationships` will be documented in th
 
 ## [Unreleased]
 
+### Added
+- Added PHP 8.6 to the supported test matrix and Composer requirement.
+
 ### Breaking Changes
 - **BREAKING**: Dropped support for Laravel 11
 - **BREAKING**: Dropped support for PHP 8.2
